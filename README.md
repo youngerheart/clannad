@@ -10,7 +10,7 @@ manage RESTful APIs for micro projects.
 ```
 (GET) domain/userinfo // 请求用户信息
 // 管理员接口
-(GET/PUT) domain/admin/:project // 请求业务信息/修改业务信息
+(GET/PUT) domain/admin/:project // 请求项目信息/修改项目信息
 (GET) domain/admin/:project/list // 请求集合列表
 (GET/PUT/DELETE) domain/admin/:project/:collection // 请求单个集合/修改集合/删除集合及其中数据
 // 普通用户接口
@@ -22,7 +22,7 @@ manage RESTful APIs for micro projects.
 
 当用户请求某路由时，将该路由所需要的权限交由外界处理，进行用户是否所需权限的判断。
 
-如: 拥有某业务的管理员权限时可以使用所有该业务的管理员接口，并设置该业务管理员/普通用户对于该业务普通用户接口的使用权限。
+如: 拥有某项目的管理员权限时可以使用所有该项目的管理员接口，并设置该项目管理员/普通用户对于该项目普通用户接口的使用权限。
 
 权限认证后即可正确响应这些路由的操作。
 
