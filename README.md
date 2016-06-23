@@ -26,6 +26,13 @@ manage RESTful APIs for micro projects.
 
 权限认证后即可正确响应这些路由的操作。
 
+## develop
+
+```
+make server // dev back-end
+make dev // dev front-end
+```
+
 ## TODO
 
 写出更多文档，确立基本需求。
