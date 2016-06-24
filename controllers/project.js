@@ -1,4 +1,4 @@
-export default {
+const Project = {
   async add(ctx) {},
   async del(ctx) {},
   async edit(ctx) {},
@@ -6,3 +6,5 @@ export default {
   async count(ctx) {},
   async get(ctx) {}
 };
+
+export default Project;
