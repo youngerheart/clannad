@@ -17,7 +17,7 @@ manage RESTful APIs for micro projects.
 
 ## usage
 
-install `mongodb` first
+install `mongodb` first.
 
 ```
 $ npm install restdaze --save
@@ -47,9 +47,9 @@ $ make dev
 
 ## API
 
-关于目前所有的接口url，请参考 [routes.js](https://github.com/youngerheart/restdaze/blob/master/app/routes.js)。
+关于目前所有的接口url，请参考 [routes.js](https://github.com/youngerheart/restdaze/blob/master/routes.js)。
 
-关于所有资源字段详细信息，请参考 [DB docs](https://github.com/youngerheart/restdaze/blob/master/app/schemas/README.MD)。
+关于所有资源字段详细信息，请参考 [DB docs](https://github.com/youngerheart/restdaze/tree/master/schemas/README.md)。
 
 ### 通用的可能报错的结果
 
