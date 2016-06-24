@@ -1,4 +1,4 @@
-const Source =  {
+const Source = {
   async add(ctx) {},
   async del(ctx) {},
   async edit(ctx) {},

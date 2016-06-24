@@ -2,9 +2,7 @@ const Project = {
   async add(ctx) {},
   async del(ctx) {},
   async edit(ctx) {},
-  async list(ctx) {
-    console.log(123);
-  },
+  async list(ctx) {},
   async count(ctx) {},
   async get(ctx) {}
 };
