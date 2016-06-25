@@ -8,7 +8,7 @@ const router = new Router();
 
 // 管理员接口
 
-// 增加一个项目 所需字段: name, domain
+// 增加一个项目 所需字段: project, domain
 router.post('/admin', Auth.isAdmin, Project.add);
 
 // 删除项目以及其集合与所有资源数据，需要 project.name
@@ -18,7 +18,7 @@ router.del('/admin/:project', Auth.isAdmin, Project.del);
 router.put('/admin/:project', Auth.isAdmin, Project.edit);
 
 // 查询用户有权限的项目列表
-router.get('/admin', Auth.fetchAuth, Project.list);
+router.get('/admin', Auth.fetchAuth);
 
 // 查询用户有权限的项目总数
 router.get('/admin/count', Auth.fetchAuth, Project.count);

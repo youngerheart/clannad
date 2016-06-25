@@ -1,4 +1,5 @@
-import {Schema} from 'mongoose';
+import mongoose from 'mongoose';
+const Schema = mongoose.Schema;
 import Tools from './../services/tools';
 
 const CollectionSchema = new Schema({
@@ -27,6 +28,8 @@ const CollectionSchema = new Schema({
     }, '{PATH} length is not equal 4'],
     required: true
   }
+}, {
+  timestamps: true
 });
 
 Tools.dealSchema(CollectionSchema);
