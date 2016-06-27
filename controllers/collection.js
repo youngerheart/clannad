@@ -1,4 +1,4 @@
-const Collection = {
+export default {
   async add(ctx) {},
   async del(ctx) {},
   async edit(ctx) {},
@@ -6,5 +6,3 @@ const Collection = {
   async count(ctx) {},
   async get(ctx) {}
 };
-
-export default Collection;

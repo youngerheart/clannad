@@ -1,4 +1,5 @@
-import {Schema} from 'mongoose';
+import mongoose from 'mongoose';
+const Schema = mongoose.Schema;
 import Tools from './../services/tools';
 
 const SourceSchema = new Schema({
@@ -8,6 +9,8 @@ const SourceSchema = new Schema({
     required: true
   },
   data: Object
+}, {
+  timestamps: true
 });
 
 Tools.dealSchema(SourceSchema);

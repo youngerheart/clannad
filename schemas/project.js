@@ -1,4 +1,5 @@
-import {Schema} from 'mongoose';
+import mongoose from 'mongoose';
+const Schema = mongoose.Schema;
 import Tools from './../services/tools';
 
 const ProjectSchema = new Schema({
@@ -13,6 +14,8 @@ const ProjectSchema = new Schema({
     }, '{PATH} is emptyArray'],
     required: true
   }
+}, {
+  timestamps: true
 });
 
 Tools.dealSchema(ProjectSchema);

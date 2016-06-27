@@ -7,14 +7,17 @@ import Auth from './controllers/auth';
 
 const app = new Koa();
 
+mongoose.Promise = Promise;
+
 app.use(async (ctx, next) => {
   const start = new Date();
   // 直接解析出post参数
-  ctx.req.body = await parse(ctx) || {};
+  if (ctx.method !== 'GET') ctx.req.body = await parse(ctx) || {};
   ctx.type = 'json';
   try {
     await next();
   } catch (err) {
+    console.log(err);
     ctx.status = 500;
     ctx.body = {
       code: 'SERVER_ERROR',
