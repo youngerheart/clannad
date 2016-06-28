@@ -3,6 +3,7 @@ import Auth from './controllers/auth';
 import Project from './controllers/project';
 import Collection from './controllers/collection';
 import Source from './controllers/source';
+import RestError from './services/resterror';
 
 const router = new Router();
 
@@ -19,9 +20,6 @@ router.put('/admin/:project', Auth.isAdmin, Project.edit);
 
 // 查询用户有权限的项目列表
 router.get('/admin', Auth.fetchAuth);
-
-// 查询用户有权限的项目总数
-router.get('/admin/count', Auth.fetchAuth, Project.count);
 
 // 为某个项目新增集合，需要 project.name
 router.post('/admin/:project', Auth.isAdmin, Collection.add);
@@ -57,5 +55,10 @@ router.get('/:project/:collection/count', Auth.isUser, Source.count);
 
 // 获得单条资源，需要 project.name, collection.name
 router.get('/:project/:collection/:id', Auth.isUser, Source.get);
+
+// 如果都没有匹配到，抛出
+router.all('*', (ctx) => {
+  throw new RestError(405);
+});
 
 export default router;
