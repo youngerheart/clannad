@@ -5,7 +5,8 @@ import Tools from './../services/tools';
 const ProjectSchema = new Schema({
   name: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   domains: {
     type: [String],

@@ -1,3 +1,6 @@
+import Table from '../schemas/table';
+import Field from '../schemas/field';
+
 export default {
   async add(ctx) {},
   async del(ctx) {},
