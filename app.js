@@ -4,7 +4,6 @@ import parse from 'co-body';
 
 import Routes from './routes';
 import Auth from './controllers/auth';
-import RestError from './services/resterror';
 
 const app = new Koa();
 
@@ -17,20 +16,13 @@ app.use(async (ctx, next) => {
   ctx.type = 'json';
   try {
     await next();
+    if (ctx.body) ctx.status = 200;
+    else ctx.status = 204;
   } catch (err) {
-    if (err.status) {
-      process.stderr.write(err.message + '\n');
-      let {status, name, message} = err;
-      ctx.status = status;
-      ctx.body = {name, message};
-    } else {
-      process.stderr.write(err + '\n');
-      ctx.status = 500;
-      ctx.body = {
-        name: 'SERVER_ERROR',
-        message: err
-      };
-    }
+    process.stderr.write(err.message + '\n');
+    let {status, name, message} = err;
+    ctx.status = status || 500;
+    if (name) ctx.body = {name, message};
   }
   const ms = new Date() - start;
   process.stderr.write(`${ctx.method} ${ctx.url} - ${ms}ms\n`);

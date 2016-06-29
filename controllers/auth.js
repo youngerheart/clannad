@@ -32,7 +32,7 @@ const Auth = {
   },
   async fetchAuth(ctx, next) {
     // 获取所有项目，筛选出其中有权限的
-    const projects = await Project.find({}, '_id, name');
+    const projects = await Project.find({}, '_id name domains');
     if (!projects.length) throw new RestError(404, 'PROJECT_NOTFOUND_ERR', 'initialed projects are not found');
     var resArr = projects.filter((project) => {
       var p1 = dealCheck(ctx, [`${project.name}.admin`], true);
@@ -40,7 +40,6 @@ const Auth = {
       return p1 || p2;
     });
     if (!resArr.length) throw new RestError(404, 'PROJECT_NOTFOUND_ERR', 'initialed projects are not found');
-    ctx.status = 200;
     ctx.body = resArr;
   }
 };
