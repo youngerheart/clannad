@@ -15,9 +15,9 @@ const dealCheck = (ctx, needAuth, isDIY) => {
 };
 
 const checkProject = (ctx, next, type) => {
-  var project = ctx.params.projectName || ctx.req.body.projectName;
-  if (!project) throw new RestError(400, 'AUTH_PARAMS_ERR', 'missing param \'project\'');
-  else if (dealCheck(ctx, [`${project}.${type}`])) return next();
+  var projectName = ctx.params.projectName || ctx.req.body.projectName;
+  if (!projectName) throw new RestError(400, 'AUTH_PARAMS_ERR', 'missing param \'project\'');
+  else if (dealCheck(ctx, [`REST.${projectName.toUpperCase()}.${type}`])) return next();
 };
 
 const Auth = {

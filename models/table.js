@@ -6,8 +6,8 @@ const config = {
   type: [Boolean],
   default: [false, false, false, false, false],
   validate: [function(val) {
-    return val.length === 4;
-  }, '{PATH} length is not equal 4'],
+    return val.length === 5;
+  }, '{PATH} length is not equal 5'],
   required: true
 };
 
