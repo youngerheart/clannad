@@ -19,7 +19,7 @@ app.use(async (ctx, next) => {
     if (ctx.body) ctx.status = 200;
     else ctx.status = 204;
   } catch (err) {
-    process.stderr.write(err.message + '\n');
+    process.stderr.write(err + '\n');
     let {status, name, message} = err;
     ctx.status = status || 500;
     if (name) ctx.body = {name, message};
