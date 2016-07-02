@@ -14,7 +14,11 @@ const ProjectSchema = new Schema({
       return val.length > 0;
     }, '{PATH} is emptyArray'],
     required: true
-  }
+  },
+  tables: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Table'
+  }]
 }, {
   timestamps: true
 });
