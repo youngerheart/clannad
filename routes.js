@@ -14,18 +14,15 @@ const router = new Router();
 router.post('/admin', Auth.isAdmin, Project.add);
 
 router.use([
-  '/admin/:projectName/:id',
   '/admin/:projectName/table',
-  '/admin/:projectName/table/:id',
-  '/admin/:projectName/field',
-  '/admin/:projectName/field/:id'
+  '/admin/:projectName/field'
 ], Auth.isAdmin);
 
 // 删除项目以及其表与所有资源数据
-router.del('/admin/:projectName/:id', Project.del);
+router.del('/admin/:projectName/:id', Auth.isAdmin, Project.del);
 
 // 修改项目 可修改: name, domain
-router.put('/admin/:projectName/:id', Project.edit);
+router.put('/admin/:projectName/:id', Auth.isAdmin, Project.edit);
 
 // 查询用户有权限的项目列表
 router.get('/admin', Auth.fetchAuth);
@@ -51,17 +48,20 @@ router.put('/admin/:projectName/table/:id', Table.edit);
 // 查询某表详情
 router.get('/admin/:projectName/table/:id', Table.detail);
 
+// 查询某表字段列表
+router.get('/admin/:projectName/table/:id/field', Table.detail);
+
 // 给某表加上一个字段，需要 field 本体
-router.post('/admin/:projectName/field', Field.add);
+router.post('/admin/:projectName/table/:id/field', Field.add);
+
+// 删除某表的一个字段
+router.del('/admin/:projectName/field/:id', Field.del);
 
 // 修改某表的一个字段，可修改其任何内容
 router.put('/admin/:projectName/field/:id', Field.edit);
 
-// 删除某表的一个字段
-router.put('/admin/:projectName/field/:id', Field.del);
-
 // 用户接口
-router.use(['/:projectName/:tableName', '/:projectName/:tableName/:id'], Auth.isUser, Table.getModel);
+router.use(['/:projectName/:tableName'], Auth.hasTableAuth, Table.getModel);
 
 // 新增一个资源，需要 source本体。
 router.post('/:projectName/:tableName', Source.add);

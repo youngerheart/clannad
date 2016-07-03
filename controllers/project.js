@@ -7,7 +7,7 @@ export default {
     var {projectName, domains} = ctx.req.body;
     var project = new Project({name: projectName, domains});
     await project.save();
-    ctx.body = project._id;
+    ctx.body = {id: project._id};
   },
   async del(ctx) {
     var {projectName} = ctx.params;

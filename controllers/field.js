@@ -3,6 +3,8 @@ import Field from '../models/field';
 import RestError from '../services/resterror';
 import {getQuery, getList} from '../services/tools';
 
+const select = '-__v -table';
+
 export default {
   async add(ctx) {
     var {tableId} = ctx.params;
@@ -13,8 +15,8 @@ export default {
     var field = new Field(query);
     if (!table.fields) table.fields = [];
     table.fields.push(field._id);
-    await table.save();
     await field.save();
+    await table.save();
     ctx.body = {id: field._id};
   },
   async del(ctx) {
@@ -24,8 +26,8 @@ export default {
     var table = await Table.findById(field.table);
     if (!table) throw new RestError(404, 'TABLE_NOTFOUND_ERR', `table ${field.table} is not found`);
     table.fields.splice(table.fields.indexOf(id), 1);
-    await table.save();
     await field.remove();
+    await table.save();
   },
   async edit(ctx) {
     var {id} = ctx.params;
@@ -33,9 +35,11 @@ export default {
     await Field.updateById(id, query);
   },
   async list(ctx) {
+    delete ctx.params.projectName;
     ctx.body = await getList({
       model: Field,
-      params: ctx.params
+      params: ctx.params,
+      select
     });
   },
   async count(ctx) {
@@ -44,7 +48,7 @@ export default {
   },
   async detail(ctx) {
     var {id} = ctx.params;
-    var field = await Field.findById(id);
+    var field = await Field.findById(id, select);
     if (!field) throw new RestError(404, 'FIELD_NOTFOUND_ERR', `field ${id} is not found`);
     ctx.body = field;
   }

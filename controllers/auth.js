@@ -1,5 +1,6 @@
 import Project from '../models/project';
 import RestError from '../services/resterror';
+import {getAuths} from '../services/model';
 
 const dealCheck = (ctx, needAuth, isDIY) => {
   var ownAuth = Auth.check(needAuth);
@@ -16,7 +17,7 @@ const dealCheck = (ctx, needAuth, isDIY) => {
 
 const checkProject = (ctx, next, type) => {
   var projectName = ctx.params.projectName || ctx.req.body.projectName;
-  if (!projectName) throw new RestError(400, 'AUTH_PARAMS_ERR', 'missing param \'project\'');
+  if (!projectName) throw new RestError(400, 'AUTH_PARAMS_ERR', 'missing param \'projectName\'');
   else if (dealCheck(ctx, [`REST.${projectName.toUpperCase()}.${type}`])) return next();
 };
 
@@ -41,6 +42,23 @@ const Auth = {
     });
     if (!resArr.length) throw new RestError(404, 'PROJECT_NOTFOUND_ERR', 'initialed projects are not found');
     ctx.body = resArr;
+  },
+  async hasTableAuth(ctx, next) {
+    // 获取当前用户对该表的使用权限
+    var authErr = new RestError(403, 'AUTH_ERR', 'permission denied');
+    var method = ctx.method.toLowerCase();
+    var {projectName, tableName} = ctx.params;
+    var auth = (await getAuths(projectName))[`${projectName}.${tableName}`];
+    if (!auth) throw new RestError(404, 'AUTH_NOTFOUND_ERR', 'table auths are not found');
+    if ((dealCheck(ctx, [`REST.${projectName.toUpperCase()}.ROOT`], true) ||
+      dealCheck(ctx, [`REST.${projectName.toUpperCase()}.ADMIN`], true))) {
+      if (auth.adminAuth[method]) return next();
+    } else if (dealCheck(ctx, [`REST.${projectName.toUpperCase()}.USER`], true)) {
+      if (auth.userAuth[ctx.method.toLowerCase()]) return next();
+    } else {
+      if (auth.visitorAuth[ctx.method.toLowerCase()]) return next();
+    }
+    throw authErr;
   }
 };
 
