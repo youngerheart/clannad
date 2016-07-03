@@ -1,7 +1,7 @@
 const Tool = {
   dealSchema(schema) {
-    schema.statics.findById = function(id) {
-      return this.findOne({_id: id});
+    schema.statics.findById = function(id, select) {
+      return this.findOne({_id: id}, select);
     };
     schema.statics.updateById = function(id, fields) {
       return this.update({_id: id}, fields);

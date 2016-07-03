@@ -13,7 +13,13 @@ const router = new Router();
 // 增加一个项目 所需字段: project, domain
 router.post('/admin', Auth.isAdmin, Project.add);
 
-router.use(['/admin/:projectName/:id', '/admin/:projectName/table', '/admin/:projectName/table/:id', '/admin/:projectName/field', '/admin/:projectName/field/:id'], Auth.isAdmin);
+router.use([
+  '/admin/:projectName/:id',
+  '/admin/:projectName/table',
+  '/admin/:projectName/table/:id',
+  '/admin/:projectName/field',
+  '/admin/:projectName/field/:id'
+], Auth.isAdmin);
 
 // 删除项目以及其表与所有资源数据
 router.del('/admin/:projectName/:id', Project.del);
@@ -52,7 +58,7 @@ router.post('/admin/:projectName/field', Field.add);
 router.put('/admin/:projectName/field/:id', Field.edit);
 
 // 删除某表的一个字段
-router.put('/admin/:projectName/field/:id', Field.edit);
+router.put('/admin/:projectName/field/:id', Field.del);
 
 // 用户接口
 router.use(['/:projectName/:tableName', '/:projectName/:tableName/:id'], Auth.isUser, Table.getModel);
@@ -63,7 +69,7 @@ router.post('/:projectName/:tableName', Source.add);
 // 删除一个资源
 router.del('/:projectName/:tableName/:id', Source.del);
 
-// 删除一个资源
+// 修改一个资源
 router.put('/:projectName/:tableName/:id', Source.edit);
 
 // 获得资源列表

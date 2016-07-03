@@ -19,11 +19,11 @@ export default {
     ctx.body = {id: table._id};
   },
   async del(ctx) {
-    var {projectName, id} = ctx.params;
-    var project = await Project.find({name: projectName});
-    if (!project) throw new RestError(404, 'PROJECT_NOTFOUND_ERR', `project ${projectName} is not found`);
+    var {id} = ctx.params;
     var table = await Table.getById(id);
     if (!table) throw new RestError(404, 'TABLE_NOTFOUND_ERR', 'table is not found');
+    var project = await Project.findById(table.project);
+    if (!project) throw new RestError(404, 'PROJECT_NOTFOUND_ERR', `project ${table.project} is not found`);
     project.tables.splice(project.tables.indexOf(id), 1);
     await mongoose.connection.db.dropCollection(`${project.name}.${table.name}`);
     await project.save();
@@ -32,16 +32,13 @@ export default {
   },
   async edit(ctx) {
     var {id} = ctx.params;
-    var query = getQuery(ctx.req.body, ['adminAuth', 'userAuth', 'name']);
-    var table = await Table.getById(id);
-    for (let key in query) {table[key] = query[key];};
-    await table.save();
+    var query = getQuery(ctx.req.body, ['adminAuth', 'userAuth', 'visitorAuth', 'name']);
+    await Table.updateById(id, query);
   },
   async list(ctx) {
     ctx.body = await getList({
       model: Table,
-      params: ctx.params,
-      populate: 'project'
+      params: ctx.params
     });
   },
   async count(ctx) {
@@ -50,7 +47,9 @@ export default {
   },
   async detail(ctx) {
     var {id} = ctx.params;
-    ctx.body = await Table.getById(id);
+    var table = await Table.getById(id);
+    if (!table) throw new RestError(404, 'TABLE_NOTFOUND_ERR', 'table is not found');
+    ctx.body = table;
   },
   async getModel(ctx, next) {
     var {projectName, tableName} = ctx.params;
