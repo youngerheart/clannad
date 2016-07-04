@@ -1,23 +1,24 @@
-import Project from '../schemas/project';
+import Project from '../models/project';
 import RestError from '../services/resterror';
 import {getQuery} from '../services/tools';
 
 export default {
   async add(ctx) {
-    var {project: projectName, domains} = ctx.req.body;
-    project = new Project({name: projectName, domains});
+    var {projectName, domains} = ctx.req.body;
+    var project = new Project({name: projectName, domains});
     await project.save();
     ctx.body = project._id;
   },
   async del(ctx) {
-    var {id} = ctx.params;
-    var project = await Project.findById(id);
+    var {projectName} = ctx.params;
+    var project = await Project.find({name: projectName});
     if (!project) throw new RestError(404, 'PROJECT_NOTFOUND_ERR', `project ${projectName} is not found`);
     await project.remove();
   },
   async edit(ctx) {
     var fields = getQuery(ctx.req.body, ['name', 'domains']);
-    var {id} = ctx.params;
-    await Project.updateById(id, {name, fields});
-  }
+    var {projectName} = ctx.params;
+    await Project.update({name: projectName}, {name, fields});
+  },
+  async get() {}
 };

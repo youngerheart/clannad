@@ -1,4 +1,4 @@
-import Project from '../schemas/project';
+import Project from '../models/project';
 import RestError from '../services/resterror';
 
 const dealCheck = (ctx, needAuth, isDIY) => {
@@ -15,7 +15,7 @@ const dealCheck = (ctx, needAuth, isDIY) => {
 };
 
 const checkProject = (ctx, next, type) => {
-  var project = ctx.params.project || ctx.req.body.project;
+  var project = ctx.params.projectName || ctx.req.body.projectName;
   if (!project) throw new RestError(400, 'AUTH_PARAMS_ERR', 'missing param \'project\'');
   else if (dealCheck(ctx, [`${project}.${type}`])) return next();
 };
