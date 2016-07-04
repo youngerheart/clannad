@@ -4,5 +4,5 @@ export default {
   async edit(ctx) {},
   async list(ctx) {},
   async count(ctx) {},
-  async get(ctx) {}
+  async detail(ctx) {}
 };

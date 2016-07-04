@@ -13,6 +13,7 @@ export default {
     var {projectName} = ctx.params;
     var project = await Project.find({name: projectName});
     if (!project) throw new RestError(404, 'PROJECT_NOTFOUND_ERR', `project ${projectName} is not found`);
+    if (project.tables.length) throw new RestError('PROJECT_NOTEMPTY_ERR', 'tables array is not empty');
     await project.remove();
   },
   async edit(ctx) {
@@ -20,5 +21,8 @@ export default {
     var {projectName} = ctx.params;
     await Project.update({name: projectName}, {name, fields});
   },
-  async get() {}
+  async detail(ctx) {
+    var {projectName} = ctx.params;
+    ctx.body = await Project.find({name: projectName}, '-__v -tables');
+  }
 };
