@@ -21,7 +21,7 @@ const Tool = {
     var {limit, offset, ...others} = params;
     var query = fields.length ? Tool.getQuery(others, fields) : others;
     return model.find(query, select)
-      .populate(populate)
+      .populate(populate || '')
       .limit(limit || 30)
       .skip(offset || 0);
   },

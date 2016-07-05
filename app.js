@@ -20,9 +20,9 @@ app.use(async (ctx, next) => {
     else ctx.status = 204;
   } catch (err) {
     process.stderr.write(err + '\n');
-    let {status, name, message} = err;
+    let {status, name, message, errors} = err;
     ctx.status = status || 500;
-    if (name) ctx.body = {name, message};
+    if (name) ctx.body = {name, message, errors};
   }
   const ms = new Date() - start;
   process.stderr.write(`${ctx.method} ${ctx.url} - ${ms}ms\n`);
