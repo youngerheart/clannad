@@ -49,7 +49,7 @@ router.put('/admin/:projectName/table/:id', Table.edit);
 router.get('/admin/:projectName/table/:id', Table.detail);
 
 // 查询某表字段列表
-router.get('/admin/:projectName/table/:id/field', Table.detail);
+router.get('/admin/:projectName/table/:id/field', Field.list);
 
 // 给某表加上一个字段，需要 field 本体
 router.post('/admin/:projectName/table/:id/field', Field.add);

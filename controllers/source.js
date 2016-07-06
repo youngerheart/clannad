@@ -26,7 +26,7 @@ export default {
   },
   async count(ctx) {
     var {model: Model} = ctx.req;
-    var count = await Model.find(ctx.params);
+    var count = await Model.count(ctx.params);
     ctx.body = {count};
   },
   async detail(ctx) {

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
-import Tools from './../services/tools';
+import {dealSchema} from './../services/tools';
 
 const ProjectSchema = new Schema({
   name: {
@@ -23,6 +23,6 @@ const ProjectSchema = new Schema({
   timestamps: true
 });
 
-Tools.dealSchema(ProjectSchema);
+dealSchema(ProjectSchema);
 
 export default mongoose.model('Project', ProjectSchema);
