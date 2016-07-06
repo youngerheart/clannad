@@ -22,7 +22,7 @@ router.use([
 router.del('/admin/:projectName/:id', Auth.isAdmin, Project.del);
 
 // 修改项目 可修改: name, domain
-router.put('/admin/:projectName/:id', Auth.isAdmin, Project.edit);
+router.patch('/admin/:projectName/:id', Auth.isAdmin, Project.edit);
 
 // 查询用户有权限的项目列表
 router.get('/admin', Auth.fetchAuth);
@@ -43,7 +43,7 @@ router.post('/admin/:projectName/table', Table.add);
 router.del('/admin/:projectName/table/:id', Table.del);
 
 // 修改某项目的某表, 可修改 name, fields, visitorAuth, userAuth, adminAuth
-router.put('/admin/:projectName/table/:id', Table.edit);
+router.patch('/admin/:projectName/table/:id', Table.edit);
 
 // 查询某表详情
 router.get('/admin/:projectName/table/:id', Table.detail);
@@ -58,7 +58,7 @@ router.post('/admin/:projectName/table/:id/field', Field.add);
 router.del('/admin/:projectName/field/:id', Field.del);
 
 // 修改某表的一个字段，可修改其任何内容
-router.put('/admin/:projectName/field/:id', Field.edit);
+router.patch('/admin/:projectName/field/:id', Field.edit);
 
 // 用户接口
 router.use(['/:projectName/:tableName'], Auth.hasTableAuth, Table.getModel);
@@ -70,7 +70,7 @@ router.post('/:projectName/:tableName', Source.add);
 router.del('/:projectName/:tableName/:id', Source.del);
 
 // 修改一个资源
-router.put('/:projectName/:tableName/:id', Source.edit);
+router.patch('/:projectName/:tableName/:id', Source.edit);
 
 // 获得资源列表
 router.get('/:projectName/:tableName', Source.list);
@@ -83,7 +83,7 @@ router.get('/:projectName/:tableName/:id', Source.detail);
 
 // 如果都没有匹配到，抛出
 router.all('*', (ctx) => {
-  throw new RestError(405);
+  throw new RestError(405, 'ROUTE_NOTFOUND_ERR', 'route for this request is not found');
 });
 
 export default router;

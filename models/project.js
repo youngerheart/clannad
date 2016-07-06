@@ -17,7 +17,7 @@ const ProjectSchema = new Schema({
   },
   tables: [{
     type: Schema.Types.ObjectId,
-    ref: 'Table'
+    ref: 'admin.table'
   }]
 }, {
   timestamps: true
@@ -25,4 +25,4 @@ const ProjectSchema = new Schema({
 
 dealSchema(ProjectSchema);
 
-export default mongoose.model('Project', ProjectSchema);
+export default mongoose.model('admin.project', ProjectSchema);

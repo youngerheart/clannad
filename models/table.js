@@ -22,12 +22,12 @@ const TableSchema = new Schema({
   },
   project: {
     type: Schema.Types.ObjectId,
-    ref: 'Project',
+    ref: 'admin.project',
     required: true
   },
   fields: [{
     type: Schema.Types.ObjectId,
-    ref: 'Field'
+    ref: 'admin.field'
   }],
   visitorAuth: config,
   userAuth: config,
@@ -38,4 +38,4 @@ const TableSchema = new Schema({
 
 dealSchema(TableSchema);
 
-export default mongoose.model('Table', TableSchema);
+export default mongoose.model('admin.table', TableSchema);
