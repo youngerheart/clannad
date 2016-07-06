@@ -1,28 +1,31 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
-import Tools from './../services/tools';
+import {dealSchema} from './../services/tools';
 
 const FieldSchema = new Schema({
   table: {
     type: Schema.Types.ObjectId,
-    require: true
+    required: true,
+    ref: 'Table'
   },
   name: {
     type: String,
-    require: true
+    required: true
   },
   type: {
-    type: Schema.Types.Mixed,
-    require: true
+    type: String,
+    enum: ['String', 'Number', 'Date', 'Buffer', 'Boolean', 'Mixed', 'ObjectId', 'Array'],
+    required: true
   },
-  require: Boolean,
+  required: Boolean,
   unique: Boolean,
   default: Schema.Types.Mixed,
-  validExp: String
+  validExp: String,
+  ref: String
 }, {
   timestamps: true
 });
 
-Tools.dealSchema(FieldSchema);
+dealSchema(FieldSchema);
 
 export default mongoose.model('Field', FieldSchema);

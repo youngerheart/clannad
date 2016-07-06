@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
-import Tools from './../services/tools';
+import {dealSchema} from './../services/tools';
 
 const defaultBoolean = {
   type: Boolean,
@@ -25,6 +25,10 @@ const TableSchema = new Schema({
     ref: 'Project',
     required: true
   },
+  fields: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Field'
+  }],
   visitorAuth: config,
   userAuth: config,
   adminAuth: config
@@ -32,6 +36,6 @@ const TableSchema = new Schema({
   timestamps: true
 });
 
-Tools.dealSchema(TableSchema);
+dealSchema(TableSchema);
 
 export default mongoose.model('Table', TableSchema);

@@ -4,7 +4,7 @@ import Table from '../models/table';
 import Field from '../models/field';
 import RestError from '../services/resterror';
 import {getQuery, getList} from '../services/tools';
-import {caches, removeAuth, setAuth} from '../services/model';
+import {getCaches, removeAuth, setAuth} from '../services/model';
 
 const select = '-__v -project';
 
@@ -23,7 +23,7 @@ export default {
     ctx.body = {id: table._id};
   },
   async del(ctx) {
-    var {id} = ctx.params;
+    var {id, projectName} = ctx.params;
     var table = await Table.findById(id);
     if (!table) throw new RestError(404, 'TABLE_NOTFOUND_ERR', 'table is not found');
     var project = await Project.findById(table.project);
@@ -33,7 +33,7 @@ export default {
     await table.remove();
     await project.save();
     await Field.remove({table: {$in: table.field}});
-    removeAuth[`${project.name}.${table.name}`];
+    await removeAuth(table, projectName);
   },
   async edit(ctx) {
     var {id, projectName} = ctx.params;
@@ -63,7 +63,7 @@ export default {
   },
   async getModel(ctx, next) {
     var {projectName, tableName} = ctx.params;
-    var cache = caches[`${projectName}.${tableName}`];
+    var cache = (await getCaches(projectName))[`${projectName}.${tableName}`];
     if (!cache) throw new RestError(404, 'MODEL_NOTFOUND_ERR', `model ${projectName}.${tableName} is not found`);
     ctx.req.model = cache;
     return next();
