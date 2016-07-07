@@ -50,10 +50,11 @@ export default {
     setAuth(table, projectName);
   },
   async list(ctx) {
-    delete ctx.params.projectName;
+    var {params} = {...ctx.params};
+    delete params.projectName;
     ctx.body = await getList({
       model: Table,
-      params: ctx.params,
+      params,
       select
     });
   },

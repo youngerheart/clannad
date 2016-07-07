@@ -11,7 +11,8 @@ const getSelectStr = (name, auth) => {
   for (let name in shows) {
     if (shows[name][auth]) select.push(name);
   }
-  return select.join(' ');
+  select = select.join(' ');
+  return select ? select + ' -__v' : '_id createdAt updatedAt';
 };
 
 export default {
@@ -35,12 +36,12 @@ export default {
     var {model: Model} = ctx.req;
     var {projectName, tableName} = ctx.params;
     var select = getSelectStr(`${projectName}.${tableName}`, ctx.req.auth);
-    select = select ? select + ' -__v' : '_id createdAt updatedAt';
-    delete ctx.params.projectName;
-    delete ctx.params.tableName;
+    var params = {...ctx.params};
+    delete params.projectName;
+    delete params.tableName;
     ctx.body = await getList({
       model: Model,
-      params: ctx.params,
+      params,
       select
     });
   },

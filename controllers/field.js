@@ -46,9 +46,10 @@ export default {
     await setCache(field, projectName, table.name);
   },
   async list(ctx) {
-    delete ctx.params.projectName;
-    var {id: table, others} = ctx.params;
-    var params = {...others, table};
+    var params = {...ctx.params};
+    delete params.projectName;
+    var {id: table, ...others} = params;
+    params = {...others, table};
     ctx.body = await getList({
       model: Field,
       params,

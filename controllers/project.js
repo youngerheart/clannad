@@ -1,6 +1,7 @@
 import Project from '../models/project';
 import RestError from '../services/resterror';
 import {getQuery} from '../services/tools';
+import {initAuths, removeCORS} from '../services/model';
 
 export default {
   async add(ctx) {
@@ -15,11 +16,13 @@ export default {
     if (!project) throw new RestError(404, 'PROJECT_NOTFOUND_ERR', `project ${projectName} is not found`);
     if (project.tables.length) throw new RestError('PROJECT_NOTEMPTY_ERR', 'tables array is not empty');
     await project.remove();
+    removeCORS(projectName);
   },
   async edit(ctx) {
     var fields = getQuery(ctx.req.body, ['name', 'domains']);
     var {projectName} = ctx.params;
-    await Project.update({name: projectName}, {name, fields});
+    await Project.update({name: projectName}, fields);
+    if (fields.domains) await initAuths(projectName);
   },
   async detail(ctx) {
     var {projectName} = ctx.params;
