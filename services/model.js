@@ -12,6 +12,8 @@ var globalFields = null;
 var auths = null;
 // 储存字段的查看权限
 var shows = {};
+// 储存所有cors的domain数组
+var cors = {};
 
 const getField = (data) => {
   data = JSON.parse(JSON.stringify(data));
@@ -85,6 +87,8 @@ var Model = {
     var name = `${projectName}.${tableName}`;
     var fields = globalFields[name];
     delete fields[fieldData.name];
+    // 删除显示权限
+    if (shows[name] && shows[name][fieldData.name]) delete shows[name][fieldData.name];
     var model = setModel(new Schema(fields, {timestamps: true}), name);
     // 更新该数据表中所有数据，删除该字段
     await model.update({[fieldData.name]: {$ne: null}}, {[fieldData.name]: null});
@@ -93,6 +97,7 @@ var Model = {
     if (!auths) auths = {};
     var project = await Project.findOne({name: projectName}).populate('tables');
     if (!project) throw new RestError(404, 'PROJECT_NOTFOUND_ERROR', `project ${projectName} is not found`);
+    cors[projectName] = project.domains;
     project.tables.forEach((table) => {
       let {visitorAuth, userAuth, adminAuth} = table;
       auths[`${projectName}.${table.name}`] = {visitorAuth, userAuth, adminAuth};
@@ -113,6 +118,12 @@ var Model = {
   },
   getShows(name) {
     return shows[name];
+  },
+  getCORS(name) {
+    return cors[name];
+  },
+  removeCORS(name) {
+    delete cors[name];
   }
 };
 
