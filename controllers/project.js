@@ -23,6 +23,8 @@ export default {
   },
   async detail(ctx) {
     var {projectName} = ctx.params;
-    ctx.body = await Project.find({name: projectName}, '-__v -tables');
+    var project = await Project.findOne({name: projectName}, '-__v -tables');
+    if (!project) throw new RestError(404, 'PROJECT_NOTFOUND_ERR', `project ${projectName} is not found`);
+    ctx.body = project;
   }
 };

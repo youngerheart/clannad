@@ -14,7 +14,10 @@ export default {
     var {projectName} = ctx.params;
     var project = await Project.findOne({name: projectName});
     if (!project) throw new RestError(404, 'PROJECT_NOTFOUND_ERR', `project ${projectName} is not found`);
-    var table = new Table({name, project: project._id});
+    // 一个项目中的表不可重复
+    var table = await Table.findOne({project: project._id, name});
+    if (table) throw new RestError(400, 'TABLE_EXIST_ERR', `table ${name} is existed in project ${projectName}`);
+    table = new Table({name, project: project._id});
     if (!project.tables) project.tables = [];
     project.tables.push(table._id);
     await table.save();
@@ -29,7 +32,10 @@ export default {
     var project = await Project.findById(table.project);
     if (!project) throw new RestError(404, 'PROJECT_NOTFOUND_ERR', `project ${table.project} is not found`);
     project.tables.splice(project.tables.indexOf(id), 1);
-    await mongoose.connection.db.dropCollection(`${project.name}.${table.name}`);
+    var collection = await mongoose.connection.db
+      .dropCollection(`${project.name}.${table.name}`)
+      .catch((err) => {if (err.message !== 'ns not found') throw err;});
+    if (collection) await collection.remove();
     await table.remove();
     await project.save();
     await Field.remove({table: {$in: table.field}});
