@@ -4,4 +4,7 @@ install:
 
 dev: install
 	@eslint --fix app.js route.js schemas/*.js services/*.js controllers/*.js
-	@nodemon test.js
+	@nodemon src/test.js
+
+deploy:
+	@babel src --out-dir dist
