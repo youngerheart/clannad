@@ -5,21 +5,21 @@ import {initAuths, removeCORS} from '../services/model';
 
 export default {
   async add(ctx) {
-    var {projectName, domains} = ctx.req.body;
-    var project = new Project({name: projectName, domains});
+    var {name, domains} = ctx.req.body;
+    var project = new Project({name, domains});
     await project.save();
     ctx.body = {id: project._id};
   },
   async del(ctx) {
     var {projectName} = ctx.params;
-    var project = await Project.find({name: projectName});
+    var project = await Project.findOne({name: projectName});
     if (!project) throw new RestError(404, 'PROJECT_NOTFOUND_ERR', `project ${projectName} is not found`);
-    if (project.tables.length) throw new RestError('PROJECT_NOTEMPTY_ERR', 'tables array is not empty');
+    if (project.tables && project.tables.length) throw new RestError('PROJECT_NOTEMPTY_ERR', 'tables array is not empty');
     await project.remove();
     removeCORS(projectName);
   },
   async edit(ctx) {
-    var fields = getQuery(ctx.req.body, ['name', 'domains']);
+    var fields = getQuery(ctx.req.body, ['domains']);
     var {projectName} = ctx.params;
     await Project.update({name: projectName}, fields);
     if (fields.domains) await initAuths(projectName);

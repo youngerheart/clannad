@@ -29,17 +29,14 @@ export default {
     var {id, projectName} = ctx.params;
     var table = await Table.findById(id);
     if (!table) throw new RestError(404, 'TABLE_NOTFOUND_ERR', 'table is not found');
-    var project = await Project.findById(table.project);
-    if (!project) throw new RestError(404, 'PROJECT_NOTFOUND_ERR', `project ${table.project} is not found`);
-    project.tables.splice(project.tables.indexOf(id), 1);
     var collection = await mongoose.connection.db
-      .dropCollection(`${project.name}.${table.name}`)
-      .catch((err) => {if (err.message !== 'ns not found') throw err;});
-    if (collection) await collection.remove();
+        .dropCollection(`${projectName}.${table.name}`)
+        .catch((err) => {if (err.message !== 'ns not found') throw err;});
     await table.remove();
-    await project.save();
+    await Project.pullField({name: projectName}, 'tables', mongoose.Types.ObjectId(id));
     await Field.remove({table: {$in: table.field}});
     await removeAuth(table, projectName);
+    if (collection) await collection.remove();
   },
   async edit(ctx) {
     var {id, projectName} = ctx.params;
@@ -50,7 +47,7 @@ export default {
     setAuth(table, projectName);
   },
   async list(ctx) {
-    var {params} = {...ctx.params};
+    var params = {...ctx.params};
     delete params.projectName;
     ctx.body = await getList({
       model: Table,

@@ -19,10 +19,10 @@ router.use([
 ], Auth.isAdmin);
 
 // 删除项目以及其表与所有资源数据
-router.del('/admin/:projectName/:id', Auth.isAdmin, Project.del);
+router.del('/admin/:projectName', Auth.isAdmin, Project.del);
 
 // 修改项目 可修改: name, domain
-router.patch('/admin/:projectName/:id', Auth.isAdmin, Project.edit);
+router.patch('/admin/:projectName', Auth.isAdmin, Project.edit);
 
 // 查询用户有权限的项目列表
 router.get('/admin', Auth.fetchAuth);

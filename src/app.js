@@ -40,7 +40,8 @@ app.use(async (ctx, next) => {
 app.use(Routes.routes());
 
 export default {
-  auth(callback) {
+  auth(callback, name = 'REST') {
+    Auth.name = name;
     Auth.check = callback;
   },
   configDB(callback) {
