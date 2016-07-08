@@ -1,13 +1,13 @@
-const restdaze  = require('./entry');
+const clannad  = require('./entry');
 
-restdaze.configDB((mongoose) => {
+clannad.configDB((mongoose) => {
   // connection with mongodb
-  mongoose.connect('mongodb://127.0.0.1:27017/restdaze');
+  mongoose.connect('mongodb://127.0.0.1:27017/clannad');
 });
 
-restdaze.auth((authArr) => {
+clannad.auth((authArr) => {
   console.log(`need auth: ${authArr}`);
   return authArr.slice();
 });
 
-restdaze.start(3000);
+clannad.start(3000);
