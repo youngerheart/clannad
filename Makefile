@@ -3,8 +3,12 @@ install:
 	@npm --registry=http://registry.npm.taobao.org install
 
 dev: install
+	@rm -rf dist
 	@eslint --fix app.js route.js schemas/*.js services/*.js controllers/*.js
 	@nodemon src/test.js
 
 deploy:
 	@babel src --out-dir dist
+
+publish: deploy
+	@npm publish
