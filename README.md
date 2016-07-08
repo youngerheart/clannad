@@ -1,4 +1,7 @@
-# clannad
+[![NPM version](https://img.shields.io/npm/v/clannad.svg)](https://www.npmjs.com/package/clannad) [![Downloads](https://img.shields.io/npm/dm/clannad.svg)](http://badge.fury.io/js/clannad)
+
+#clannad
+
 manage RESTful APIs for micro projects.
 
 You will get data you needed, without back-end develop, just APIs.
@@ -27,7 +30,7 @@ clannad.configDB((mongoose) => {
 });
 
 clannad.auth((authArr) => {
-  console.log(`need auth: ${authArr}`);
+  // return authArr by your auth system, or return itself while don't need auth system
   return authArr.slice();
 });
 
