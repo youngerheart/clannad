@@ -3,7 +3,7 @@ manage RESTful APIs for micro projects.
 
 You will get data you needed, without back-end develop, just APIs.
 
-![clannad](http://i2.piimg.com/567571/f54cc07c01cae98d.png)
+![clannad](http://ww1.sinaimg.cn/large/0060lm7Tgw1f5mjbjqhckj316e0fkafh.jpg)
 みんな　みんな　あわせで　ひゃくにんかぞく 
 
 ## How it works
