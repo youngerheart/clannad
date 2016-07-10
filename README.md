@@ -45,9 +45,9 @@ $ make dev
 
 ## API
 
-about all API's route, view [routes.js](https://github.com/youngerheart/restdaze/blob/master/routes.js)。
+about all API's route, view [routes.js](https://github.com/youngerheart/clannad/blob/master/src/routes.js)。
 
-about all table field's detail, view [DB docs](https://github.com/youngerheart/restdaze/tree/master/schemas/README.md)。
+about all table field's detail, view [DB docs](https://github.com/youngerheart/clannad/blob/master/src/models/README.md)。
 
 ### General possible error results
 

@@ -16,9 +16,7 @@ describe('deal projects', function() {
   it('should successfuly show project detail', function(done) {
     if (!Body.length) return done();
     Body.forEach(function(project, index) {
-      request.get('http://localhost:3000/admin/' + project.name, {
-        json: true
-      }, function(err, res) {
+      request.get('http://localhost:3000/admin/' + project.name, function(err, res) {
         expect(err).to.be.null;
         expect(res.statusCode).to.equal(200);
         if (index === Body.length - 1) done();

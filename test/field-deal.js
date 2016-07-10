@@ -6,7 +6,7 @@ describe('deal fields', function() {
   var Body = [];
 
   it('should recive table id', function(done) {
-    request.get('http://localhost:3000/admin/project0/table?asc=1', function(err, res, body) {
+    request.get('http://localhost:3000/admin/project0/table?name=table0', function(err, res, body) {
       expect(err).to.be.null;
       expect(res.statusCode).to.equal(200);
       table = JSON.parse(body)[0];
