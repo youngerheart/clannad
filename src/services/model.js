@@ -43,14 +43,14 @@ const setModel = (schema, name) => {
 
 var Model = {
   async initCaches(projectName) {
-    if (!caches) caches = {};
-    if (!globalFields) globalFields = {};
     var project = await Project
     .findOne({name: projectName})
     .populate({
       path: 'tables',
       populate: {path: 'fields'}
     });
+    if (!caches) caches = {};
+    if (!globalFields) globalFields = {};
     project.tables.forEach((table) => {
       let fields = {};
       // 重做显示权限

@@ -5,7 +5,7 @@ describe('deal tables', function() {
   var Body = [];
 
   it('should successfuly list tables', function(done) {
-    request.get('http://localhost:3000/admin/project0/table', function(err, res, body) {
+    request.get('http://localhost:3000/admin/project0/table?limit=999', function(err, res, body) {
       expect(err).to.be.null;
       expect(res.statusCode).to.equal(200);
       Body = JSON.parse(body);
@@ -14,7 +14,7 @@ describe('deal tables', function() {
   });
 
   it('should successfuly show table detail', function(done) {
-    if (!Body.length) done();
+    if (!Body.length) return done();
     Body.forEach(function(table, index) {
       request.get('http://localhost:3000/admin/project0/table/' + table._id, {
         json: true
@@ -27,7 +27,7 @@ describe('deal tables', function() {
   });
 
   it('should successfuly edit tables', function(done) {
-    if (!Body.length) done();
+    if (!Body.length) return done();
     Body.forEach(function(table, index) {
       request.patch('http://localhost:3000/admin/project0/table/' + table._id, {
         json: true,

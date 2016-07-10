@@ -71,6 +71,8 @@ about all table field's detail, view [DB docs](https://github.com/youngerheart/r
 
 `offset` default 0
 
+`asc` default sort is `-updatedAt`, use `asc=1` to make sort be `updateAt`
+
 ### General result field
 
 `_id`

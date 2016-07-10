@@ -4,7 +4,7 @@ install:
 
 dev: install
 	@rm -rf dist
-	@eslint --fix app.js route.js schemas/*.js services/*.js controllers/*.js
+	@eslint --fix app.js route.js src/*.js test/*.js
 	@nodemon src/test.js
 
 deploy:

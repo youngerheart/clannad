@@ -2,8 +2,7 @@ var request = require('request');
 var expect = require('chai').expect;
 
 describe('add tables', function() {
-  var Body;
-  for (var index = 0; index < 100; index ++) {
+  for (var index = 0; index < 100; index++) {
     test('table' + index);
   }
   function test(name) {
