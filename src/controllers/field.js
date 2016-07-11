@@ -26,14 +26,11 @@ export default {
   },
   async del(ctx) {
     var {id, projectName} = ctx.params;
-    var field = await Field.findById(id);
+    var field = await Field.findById(id).populate('table');
     if (!field) throw new RestError(404, 'FIELD_NOTFOUND_ERR', `field ${id} is not found`);
-    var table = await Table.findById(field.table);
-    if (!table) throw new RestError(404, 'TABLE_NOTFOUND_ERR', `table ${field.table} is not found`);
-    table.fields.splice(table.fields.indexOf(id), 1);
-    await removeCaches(field, projectName, table.name);
+    await removeCaches(field, projectName, field.table.name);
     await field.remove();
-    await table.save();
+    await Table.pullField({_id: field.table._id}, 'fields', id);
   },
   async edit(ctx) {
     var {id, projectName} = ctx.params;
