@@ -37,10 +37,11 @@ clannad.auth((authArr) => {
 clannad.start(3000);
 ```
 
-## Develop
+## Develop & Test
 
 ```
 $ make dev
+$ cd test && make source
 ```
 
 ## API

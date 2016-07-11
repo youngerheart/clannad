@@ -31,3 +31,5 @@ source-add:
 
 source-deal:
 	@mocha source-deal.js
+
+source: field-add source-add source-deal field-deal table-deal project-deal
