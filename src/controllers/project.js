@@ -14,7 +14,7 @@ export default {
     var {projectName} = ctx.params;
     var project = await Project.findOne({name: projectName});
     if (!project) throw new RestError(404, 'PROJECT_NOTFOUND_ERR', `project ${projectName} is not found`);
-    if (project.tables && project.tables.length) throw new RestError('PROJECT_NOTEMPTY_ERR', 'tables array is not empty');
+    if (project.tables && project.tables.length) throw new RestError(400, 'PROJECT_NOTEMPTY_ERR', 'tables array is not empty');
     await project.remove();
     removeCORS(projectName);
   },

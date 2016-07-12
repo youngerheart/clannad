@@ -28,9 +28,9 @@ export default {
     var {id, projectName} = ctx.params;
     var field = await Field.findById(id).populate('table');
     if (!field) throw new RestError(404, 'FIELD_NOTFOUND_ERR', `field ${id} is not found`);
+    await Table.pullField({_id: field.table._id}, 'fields', id);
     await removeCaches(field, projectName, field.table.name);
     await field.remove();
-    await Table.pullField({_id: field.table._id}, 'fields', id);
   },
   async edit(ctx) {
     var {id, projectName} = ctx.params;
@@ -50,11 +50,12 @@ export default {
     ctx.body = await getList({
       model: Field,
       params,
-      select
+      select,
+      query: ctx.query
     });
   },
   async count(ctx) {
-    var count = Field.find(ctx.params);
+    var count = Field.count(ctx.params);
     ctx.body = {count};
   },
   async detail(ctx) {

@@ -2,7 +2,7 @@ var request = require('request');
 var expect = require('chai').expect;
 
 describe('add projects', function() {
-  for (var index = 0; index < 100; index ++) {
+  for (var index = 0; index < 100; index++) {
     test('project' + index);
   }
   function test(name) {

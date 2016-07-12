@@ -52,7 +52,8 @@ export default {
     ctx.body = await getList({
       model: Table,
       params,
-      select
+      select,
+      query: ctx.query
     });
   },
   async count(ctx) {

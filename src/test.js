@@ -1,4 +1,4 @@
-const clannad  = require('./entry');
+const clannad = require('./entry');
 
 clannad.configDB((mongoose) => {
   // connection with mongodb
@@ -6,7 +6,7 @@ clannad.configDB((mongoose) => {
 });
 
 clannad.auth((authArr) => {
-  console.log(`need auth: ${authArr}`);
+  process.stderr.write(`need auth: ${authArr}\n`);
   return authArr.slice();
 });
 

@@ -48,13 +48,13 @@ const Tool = {
     });
     return query;
   },
-  async getList({model, params, populate, select = '', fields = []}) {
-    var {limit, offset, ...others} = params;
-    var query = fields.length ? Tool.getQuery(others, fields) : others;
-    return model.find(query, select)
+  async getList({model, params, populate, query = {}, select = '', fields = []}) {
+    params = fields.length ? Tool.getQuery(params, fields) : params;
+    return model.find(params, select)
       .populate(populate || '')
-      .limit(limit || 30)
-      .skip(offset || 0);
+      .limit(query.limit || 30)
+      .skip(query.offset || 0)
+      .sort(`${query.desc ? '' : '-'}updatedAt`);
   },
   parseArr(str) {
     return str.split('\'').filter(item => item.length > 3);

@@ -40,7 +40,7 @@ const Auth = {
   },
   async fetchAuth(ctx, next) {
     // 获取所有项目，筛选出其中有权限的
-    var projects = await Project.find({}, '_id name domains');
+    var projects = await Project.find({}, '_id name domains').sort('-updateAt');
     var resArr = projects.filter((project) => {
       return dealCheck(ctx, [`${Auth.name}.${project.name.toUpperCase()}.ADMIN`], true) ||
       dealCheck(ctx, [`${Auth.name}.${project.name.toUpperCase()}.USER`], true);
