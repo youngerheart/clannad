@@ -34,7 +34,10 @@ clannad.auth((authArr) => {
   return authArr.slice();
 });
 
-clannad.start(3000);
+clannad.app.use(...) // clannad's koa app
+clannad.app.listen(3000, () => {
+  process.stderr.write(`Server running at http://localhost:${port}\n`);
+});
 ```
 
 ## Develop & Test
