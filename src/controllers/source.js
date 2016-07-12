@@ -5,14 +5,13 @@ import {getShows} from '../services/model';
 const getSelectStr = (name, auth) => {
   var select = [];
   var shows = getShows(name);
-  // console.log(name, auth);
   if (!auth) throw new RestError(404, 'AUTH_NOTFOUND_ERR', 'auth is not found');
   if (!shows) throw new RestError(404, 'SHOWS_NOTFOUND_ERR', `shows ${shows} is not found`);
   for (let name in shows) {
-    if (shows[name][auth]) select.push(name);
+    if (!shows[name][auth]) select.push(`-${name}`);
   }
   select = select.join(' ');
-  return select ? select + ' -__v' : '_id createdAt updatedAt';
+  return select + ' -__v';
 };
 
 export default {
@@ -36,12 +35,8 @@ export default {
     var {model: Model} = ctx.req;
     var {projectName, tableName} = ctx.params;
     var select = getSelectStr(`${projectName}.${tableName}`, ctx.req.auth);
-    var params = {...ctx.params};
-    delete params.projectName;
-    delete params.tableName;
     ctx.body = await getList({
       model: Model,
-      params,
       select,
       query: ctx.query
     });

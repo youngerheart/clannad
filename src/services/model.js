@@ -41,7 +41,7 @@ const setModel = (schema, name) => {
   return caches[name];
 };
 
-var Model = {
+const Model = {
   async initCaches(projectName) {
     var project = await Project
     .findOne({name: projectName})
@@ -94,14 +94,15 @@ var Model = {
     await model.update({[fieldData.name]: {$ne: null}}, {[fieldData.name]: null});
   },
   async initAuths(projectName) {
-    if (!auths) auths = {};
     var project = await Project.findOne({name: projectName}).populate('tables');
     if (!project) throw new RestError(404, 'PROJECT_NOTFOUND_ERROR', `project ${projectName} is not found`);
+    if (!auths) auths = {};
     cors[projectName] = project.domains;
     project.tables.forEach((table) => {
       let {visitorAuth, userAuth, adminAuth} = table;
       auths[`${projectName}.${table.name}`] = {visitorAuth, userAuth, adminAuth};
     });
+    console.log('auth finish');
   },
   async getAuths(projectName) {
     if (!auths) await Model.initAuths(projectName);

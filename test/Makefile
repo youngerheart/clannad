@@ -26,7 +26,7 @@ field-deal:
 field: field-add field-deal table-deal project-deal
 
 # 4. source test
-source-add: field-add
+source-add:
 	@mocha source-add.js
 
 source-deal:
