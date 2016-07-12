@@ -36,7 +36,7 @@ clannad.auth((authArr) => {
 
 clannad.app.use(...) // clannad's koa app
 clannad.app.listen(3000, () => {
-  process.stderr.write(`Server running at http://localhost:${port}\n`);
+  process.stderr.write(`Server running at http://localhost:3000\n`);
 });
 ```
 

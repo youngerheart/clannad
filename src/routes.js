@@ -81,9 +81,4 @@ router.get('/:projectName/:tableName/count', Source.count);
 // 获得单条资源
 router.get('/:projectName/:tableName/:id', Source.detail);
 
-// 如果都没有匹配到，抛出
-router.all('*', (ctx) => {
-  throw new RestError(405, 'ROUTE_NOTFOUND_ERR', 'route for this request is not found');
-});
-
 export default router;
