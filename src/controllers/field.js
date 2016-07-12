@@ -21,7 +21,7 @@ export default {
     table.fields.push(field._id);
     await field.save();
     await table.save();
-    setCache(field, projectName, table.name);
+    await setCache(field, projectName, table.name);
     ctx.body = {id: field._id};
   },
   async del(ctx) {

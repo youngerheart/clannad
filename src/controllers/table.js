@@ -29,14 +29,13 @@ export default {
     var {id, projectName} = ctx.params;
     var table = await Table.findById(id);
     if (!table) throw new RestError(404, 'TABLE_NOTFOUND_ERR', 'table is not found');
-    var collection = await mongoose.connection.db
+    await mongoose.connection.db
         .dropCollection(`${projectName}.${table.name}`)
         .catch((err) => {if (err.message !== 'ns not found') throw err;});
     await table.remove();
     await Project.pullField({name: projectName}, 'tables', mongoose.Types.ObjectId(id));
-    await Field.remove({table: {$in: table.field}});
+    await Field.remove({table: table._id});
     await removeAuth(table, projectName);
-    if (collection) await collection.remove();
   },
   async edit(ctx) {
     var {id, projectName} = ctx.params;

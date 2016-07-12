@@ -36,8 +36,8 @@ const getField = (data) => {
 
 const setModel = (schema, name) => {
   dealSchema(schema);
-  if (!caches[name]) caches[name] = mongoose.model(name, schema);
-  else caches[name].schema = schema;
+  if (caches[name]) delete mongoose.models[name];
+  caches[name] = mongoose.model(name, schema);
   return caches[name];
 };
 
@@ -102,7 +102,6 @@ const Model = {
       let {visitorAuth, userAuth, adminAuth} = table;
       auths[`${projectName}.${table.name}`] = {visitorAuth, userAuth, adminAuth};
     });
-    console.log('auth finish');
   },
   async getAuths(projectName) {
     if (!auths) await Model.initAuths(projectName);

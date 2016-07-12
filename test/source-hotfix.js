@@ -1,7 +1,7 @@
 var request = require('request');
 var expect = require('chai').expect;
 
-describe('deal fields', function() {
+describe('hotfix sources', function() {
   var table;
   var Body = [];
 
@@ -16,7 +16,7 @@ describe('deal fields', function() {
 
   it('should successfuly list fields', function(done) {
     if (!table) return done();
-    request.get('http://localhost:3000/admin/project0/table/' + table._id + '/field?limit=999', function(err, res, body) {
+    request.get('http://localhost:3000/admin/project0/table/' + table._id + '/field?limit=999&asc=true', function(err, res, body) {
       expect(err).to.be.null;
       expect(res.statusCode).to.equal(200);
       Body = JSON.parse(body);
@@ -24,13 +24,18 @@ describe('deal fields', function() {
     });
   });
 
-  it('should successfuly remove fields', function(done) {
+  it('should successfuly edit fields', function(done) {
+    this.timeout(10000);
     if (!Body.length) return done();
     Body.forEach(function(field, index) {
-      request.del('http://localhost:3000/admin/project0/field/' + field._id, {
+      var body = {
+        type: 'Boolean'
+      };
+      if (index === 2) body.show = {admin: false, user: false, visitor: false};
+      request.patch('http://localhost:3000/admin/project0/field/' + field._id, {
         json: true,
-        body: {}
-      }, function(err, res) {
+        body: body
+      }, function(err, res, body) {
         expect(err).to.be.null;
         expect(res.statusCode).to.equal(204);
         if (index === Body.length - 1) done();
