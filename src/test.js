@@ -10,4 +10,6 @@ clannad.auth((authArr) => {
   return authArr.slice();
 });
 
-clannad.start(3000);
+clannad.app.listen(3000, () => {
+  process.stderr.write(`Server running at http://localhost:3000\n`);
+});

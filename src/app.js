@@ -40,16 +40,12 @@ app.use(async (ctx, next) => {
 app.use(Routes.routes());
 
 export default {
+  app,
   auth(callback, name = 'REST') {
     Auth.name = name;
     Auth.check = callback;
   },
   configDB(callback) {
     callback(mongoose);
-  },
-  start(port) {
-    app.listen(port, () => {
-      process.stderr.write(`Server running at http://localhost:${port}\n`);
-    });
   }
 };
