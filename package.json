@@ -1,6 +1,6 @@
 {
   "name": "clannad",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "manage RESTful APIs for micro projects.",
   "main": "dist/entry.js",
   "files": [

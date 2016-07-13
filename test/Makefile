@@ -29,7 +29,10 @@ field: field-add field-deal table-deal project-deal
 source-add:
 	@mocha source-add.js
 
+source-hotfix:
+	@mocha source-hotfix.js
+
 source-deal:
 	@mocha source-deal.js
 
-source: field-add source-add source-deal field-deal table-deal project-deal
+source: field-add source-add source-hotfix source-deal field-deal table-deal project-deal
