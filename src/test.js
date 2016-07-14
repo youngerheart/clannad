@@ -7,7 +7,7 @@ clannad.configDB((mongoose) => {
 
 clannad.auth((ctx, authArr) => {
   process.stderr.write(`need auth: ${authArr}\n`);
-  return [];
+  return authArr.slice();
 });
 
 clannad.app.listen(3000, () => {

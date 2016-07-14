@@ -52,6 +52,8 @@ clannad.app.listen(3000, () => {
 
 **visitor** could use APIs about ${projectName}.${tableName} configured by root, depend on config 'visitorAuth' in admin.table.
 
+**token** while a request header own field 'X-Token', and it's value exist in that admin.project.tokens, that request will be regarded as a user's request.
+
 **field visibile** depend on config 'show' in admin.field.
 
 ## Develop & Test
