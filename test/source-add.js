@@ -18,9 +18,10 @@ describe('add source', function() {
 
   it('should change auth for this table', function(done) {
     if (!table) return done();
+    var auth = {get: true, post: true, patch: true, delete: true};
     request.patch('http://localhost:3000/admin/project0/table/' + table._id, {
       json: true,
-      body: {adminAuth: {get: true, post: true, patch: true, delete: true}}
+      body: {adminAuth: auth, userAuth: auth}
     }, function(err, res, body) {
       expect(err).to.be.null;
       expect(res.statusCode).to.equal(204);

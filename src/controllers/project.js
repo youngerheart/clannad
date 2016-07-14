@@ -1,12 +1,12 @@
 import Project from '../models/project';
 import RestError from '../services/resterror';
 import {getQuery} from '../services/tools';
-import {initAuths, removeCORS} from '../services/model';
+import {initAuths, removeCORS, setTokens, removeTokens} from '../services/model';
 
 export default {
   async add(ctx) {
-    var {name, domains} = ctx.req.body;
-    var project = new Project({name, domains});
+    var {name, domains, tokens} = ctx.req.body;
+    var project = new Project({name, domains, tokens});
     await project.save();
     ctx.body = {id: project._id};
   },
@@ -19,9 +19,10 @@ export default {
     removeCORS(projectName);
   },
   async edit(ctx) {
-    var fields = getQuery(ctx.req.body, ['domains']);
+    var fields = getQuery(ctx.req.body, ['domains', 'tokens']);
     var {projectName} = ctx.params;
-    await Project.update({name: projectName}, fields);
+    await Project.update({name: projectName}, fields, {runValidators: true});
+    if (fields.tokens) setTokens(fields.tokens, projectName);
     if (fields.domains) await initAuths(projectName);
   },
   async detail(ctx) {

@@ -27,7 +27,7 @@ router.patch('/admin/:projectName', Auth.isAdmin, Project.edit);
 router.get('/admin', Auth.fetchAuth);
 
 // 查询某项目详情
-router.get('/admin/:projectName', Project.detail);
+router.get('/admin/:projectName', Auth.isAdmin, Project.detail);
 
 // 查询某项目的表列表
 router.get('/admin/:projectName/table', Table.list);
@@ -60,7 +60,7 @@ router.del('/admin/:projectName/field/:id', Field.del);
 router.patch('/admin/:projectName/field/:id', Field.edit);
 
 // 用户接口
-router.use(['/:projectName/:tableName'], Auth.hasTableAuth, Table.getModel);
+router.use('/:projectName/:tableName', Auth.hasTableAuth, Table.getModel);
 
 // 新增一个资源，需要 source本体。
 router.post('/:projectName/:tableName', Source.add);

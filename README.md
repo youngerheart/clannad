@@ -29,11 +29,11 @@ clannad.configDB((mongoose) => {
   mongoose.connect('mongodb://127.0.0.1:27017/clannad');
 });
 
-clannad.auth(async (authArr) => {
+clannad.auth(async (ctx, authArr) => {
   // return authArr by your auth system, or return itself while don't need auth system
   // each authcode is like '${PREFIX}.${PROJECTNAME}.${ROLENAME}'
   // rolename enum as 'root', 'admin', 'user'
-  return await check(authArr);
+  return await check(ctx, authArr);
 }, 'REST'); // prefix for each authcode, default 'REST'
 
 clannad.app.use(...) // clannad's koa app

@@ -14,6 +14,8 @@ var auths = null;
 var shows = {};
 // 储存所有cors的domain数组
 var cors = {};
+// 储存所有项目的token数组
+var globalTokens = {};
 
 const getField = (data) => {
   data = JSON.parse(JSON.stringify(data));
@@ -124,6 +126,17 @@ const Model = {
   },
   removeCORS(name) {
     delete cors[name];
+  },
+  setTokens(tokens, projectName) {
+    globalTokens[projectName] = tokens;
+  },
+  async hasToken(token, projectName) {
+    if (!token) return;
+    if (!globalTokens[projectName]) globalTokens[projectName] = (await Project.findOne({name: projectName})).tokens;
+    return globalTokens[projectName].indexOf(token) !== -1;
+  },
+  removeTokens(name) {
+    delete globalTokens[name];
   }
 };
 
