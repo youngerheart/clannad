@@ -11,7 +11,8 @@ describe('add projects', function() {
         json: true,
         body: {
           name: name,
-          domains: ['http://baidu.com']
+          domains: ['http://baidu.com'],
+          tokens: ['hehe']
         }
       }, function(err, res, body) {
         expect(err).to.be.null;
