@@ -6,7 +6,7 @@ const checkRoute = (param) => {
   if (param && (param === 'admin' || param === 'table')) throw new RestError(400, 'ROUTE_PARAMS_ERR', 'projectName unexpand \'admin\' or \'table\'');
 };
 
-const dealCheck = (ctx, needAuth, isDIY) => {
+const dealCheck = async (ctx, needAuth, isDIY) => {
   var ownAuth = await Auth.check(needAuth);
   if (!Array.isArray(ownAuth)) throw new RestError(400, 'AUTH_PARAMS_ERR', 'function error, authCheck function should return authArray');
   var errAuth = needAuth.filter((item) => {
@@ -19,32 +19,35 @@ const dealCheck = (ctx, needAuth, isDIY) => {
   return true;
 };
 
-const checkProject = (ctx, next, type) => {
+const checkProject = async (ctx, next, type) => {
   var {id} = ctx.params;
-  checkRoute(id);
+  if (type !== 'ROOT') checkRoute(id);
   var projectName = ctx.params.projectName || ctx.req.body.name;
   if (!projectName) throw new RestError(400, 'AUTH_PARAMS_ERR', `missing param \'${ctx.params.projectName ? 'projectName' : 'name'}\'`);
-  else if (dealCheck(ctx, [`${Auth.name}.${projectName.toUpperCase()}.${type}`])) return next();
+  else if (await dealCheck(ctx, [`${Auth.name}.${projectName.toUpperCase()}.${type}`])) return next();
 };
 
 const Auth = {
   name: 'REST',
   async check() {return false;},
-  isAdmin(ctx, next) {
+  async isAdmin(ctx, next) {
     // 检查是否有某项目的管理员权限
-    return checkProject(ctx, next, 'ADMIN');
+    return await checkProject(ctx, next, 'ROOT');
   },
-  isUser(ctx, next) {
+  async isUser(ctx, next) {
     // 检查是否有某项目的用户权限
-    return checkProject(ctx, next, 'USER');
+    return await checkProject(ctx, next, 'ADMIN') || await checkProject(ctx, next, 'USER');
   },
   async fetchAuth(ctx, next) {
     // 获取所有项目，筛选出其中有权限的
     var projects = await Project.find({}, '_id name domains').sort('-updateAt');
-    var resArr = projects.filter((project) => {
-      return dealCheck(ctx, [`${Auth.name}.${project.name.toUpperCase()}.ADMIN`], true) ||
-      dealCheck(ctx, [`${Auth.name}.${project.name.toUpperCase()}.USER`], true);
-    });
+    var resArr = [];
+    for (let index = 0; index < projects.length; index++) {
+      var adminCode = `${Auth.name}.${project.name.toUpperCase()}.ADMIN`;
+      var userCode = `${Auth.name}.${project.name.toUpperCase()}.USER`;
+      if (await dealCheck(ctx, [adminCode], true) ||
+        await dealCheck(ctx, [userCode], true)) resArr.push(projects[index]);
+    }
     ctx.body = resArr;
   },
   async hasTableAuth(ctx, next) {
@@ -55,11 +58,11 @@ const Auth = {
     checkRoute(projectName);
     var auth = (await getAuths(projectName))[`${projectName}.${tableName}`];
     if (!auth) throw new RestError(404, 'AUTH_NOTFOUND_ERR', 'table auths are not found');
-    if ((dealCheck(ctx, [`${Auth.name}.${projectName.toUpperCase()}.ROOT`], true) ||
-      dealCheck(ctx, [`${Auth.name}.${projectName.toUpperCase()}.ADMIN`], true))) {
+    if ((await dealCheck(ctx, [`${Auth.name}.${projectName.toUpperCase()}.ROOT`], true) ||
+      await dealCheck(ctx, [`${Auth.name}.${projectName.toUpperCase()}.ADMIN`], true))) {
       ctx.req.auth = 'admin';
       if (auth.adminAuth[method]) return next();
-    } else if (dealCheck(ctx, [`${Auth.name}.${projectName.toUpperCase()}.USER`], true)) {
+    } else if (await dealCheck(ctx, [`${Auth.name}.${projectName.toUpperCase()}.USER`], true)) {
       ctx.req.auth = 'user';
       if (auth.userAuth[ctx.method.toLowerCase()]) return next();
     } else {

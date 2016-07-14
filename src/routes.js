@@ -4,7 +4,6 @@ import Project from './controllers/project';
 import Table from './controllers/table';
 import Source from './controllers/source';
 import Field from './controllers/field';
-import RestError from './services/resterror';
 
 const router = new Router();
 
