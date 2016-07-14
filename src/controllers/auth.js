@@ -7,7 +7,7 @@ const checkRoute = (param) => {
 };
 
 const dealCheck = (ctx, needAuth, isDIY) => {
-  var ownAuth = Auth.check(needAuth);
+  var ownAuth = await Auth.check(needAuth);
   if (!Array.isArray(ownAuth)) throw new RestError(400, 'AUTH_PARAMS_ERR', 'function error, authCheck function should return authArray');
   var errAuth = needAuth.filter((item) => {
     return ownAuth.indexOf(item) === -1;
@@ -29,7 +29,7 @@ const checkProject = (ctx, next, type) => {
 
 const Auth = {
   name: 'REST',
-  check() {return false;},
+  async check() {return false;},
   isAdmin(ctx, next) {
     // 检查是否有某项目的管理员权限
     return checkProject(ctx, next, 'ADMIN');

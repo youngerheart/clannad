@@ -29,16 +29,30 @@ clannad.configDB((mongoose) => {
   mongoose.connect('mongodb://127.0.0.1:27017/clannad');
 });
 
-clannad.auth((authArr) => {
+clannad.auth(async (authArr) => {
   // return authArr by your auth system, or return itself while don't need auth system
-  return authArr.slice();
-});
+  // each authcode is like '${PREFIX}.${PROJECTNAME}.${ROLENAME}'
+  // rolename enum as 'root', 'admin', 'user'
+  return await check(authArr);
+}, 'REST'); // prefix for each authcode, default 'REST'
 
 clannad.app.use(...) // clannad's koa app
 clannad.app.listen(3000, () => {
   process.stderr.write(`Server running at http://localhost:3000\n`);
 });
 ```
+
+### About Auth
+
+**root** could use APIs about own project (admin.project), project's table (admin.table), and table's field (admin.field).
+
+**admin** admin and root could use APIs about ${projectName}.${tableName} configured by root, depend on config 'adminAuth' in admin.table.
+
+**user** could use APIs about ${projectName}.${tableName} configured by root, depend on config 'userAuth' in admin.table.
+
+**visitor** could use APIs about ${projectName}.${tableName} configured by root, depend on config 'visitorAuth' in admin.table.
+
+**field visibile** depend on config 'show' in admin.field.
 
 ## Develop & Test
 
