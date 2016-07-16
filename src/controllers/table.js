@@ -33,7 +33,7 @@ export default {
         .dropCollection(`${projectName}.${table.name}`)
         .catch((err) => {if (err.message !== 'ns not found') throw err;});
     await table.remove();
-    await Project.pullField({name: projectName}, 'tables', mongoose.Types.ObjectId(id));
+    await Project.editField({name: projectName}, 'tables', mongoose.Types.ObjectId(id));
     await Field.remove({table: table._id});
     await removeAuth(table, projectName);
   },

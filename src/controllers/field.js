@@ -28,7 +28,7 @@ export default {
     var {id, projectName} = ctx.params;
     var field = await Field.findById(id).populate('table');
     if (!field) throw new RestError(404, 'FIELD_NOTFOUND_ERR', `field ${id} is not found`);
-    await Table.pullField({_id: field.table._id}, 'fields', id);
+    await Table.editField({_id: field.table._id}, 'fields', id);
     await removeCaches(field, projectName, field.table.name);
     await field.remove();
   },
