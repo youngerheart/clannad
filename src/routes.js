@@ -1,6 +1,7 @@
 import Router from 'koa-router';
 import Auth from './controllers/auth';
 import Project from './controllers/project';
+import Token from './controllers/token';
 import Table from './controllers/table';
 import Source from './controllers/source';
 import Field from './controllers/field';
@@ -22,6 +23,15 @@ router.del('/admin/:projectName', Auth.isAdmin, Project.del);
 
 // 修改项目 可修改: name, domain
 router.patch('/admin/:projectName', Auth.isAdmin, Project.edit);
+
+// 生成一个新的token
+router.post('/admin/:projectName/token', Auth.isAdmin, Token.add);
+
+// 删除一个 token
+router.del('/admin/:projectName/token/:name', Auth.isAdmin, Token.del);
+
+// 查看 token 数组
+router.get('/admin/:projectName/token', Auth.isAdmin, Token.list);
 
 // 查询用户有权限的项目列表
 router.get('/admin', Auth.fetchAuth);

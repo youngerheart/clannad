@@ -9,7 +9,7 @@ const Tool = {
     schema.statics.removeById = function(id) {
       return this.remove({_id: id});
     };
-    schema.statics.pullField = async function(select, name, value) {
+    schema.statics.editField = async function(select, name, value, ispush=false) {
       var resolve, reject, prom;
       if (!this._fields) this._fields = {deal: [], pullArr: []};
       prom = new Promise((res, rej) => {
@@ -21,10 +21,9 @@ const Tool = {
       var check = async () => {
         var deal = this._fields.deal.splice(0, this._fields.deal.length);
         var pullArr = this._fields.pullArr.splice(0, this._fields.pullArr.length);
+        var updateObj = ispush ? {$pushAll: {[name]: pullArr}} : {$pull: {[name]: {$in: pullArr}}};
         try {
-          var result = await this.update(select, {
-            $pull: {[name]: {$in: pullArr}}
-          }, {
+          var result = await this.update(select, updateObj, {
             multi: true
           });
           deal.forEach((deal) => deal.resolve());

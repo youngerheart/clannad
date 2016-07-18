@@ -127,16 +127,31 @@ const Model = {
   removeCORS(name) {
     delete cors[name];
   },
-  setTokens(tokens, projectName) {
-    globalTokens[projectName] = tokens;
+  async initTokens(projectName) {
+    if (!globalTokens[projectName]) globalTokens[projectName] = (await Project.findOne({name: projectName})).tokens;
+  },
+  async setToken(token, projectName) {
+    if (!token) return;
+    await Model.initTokens(projectName);
+    var index = globalTokens[projectName].indexOf(token);
+    if (index === -1) globalTokens[projectName].push(token);
+    else throw new RestError(404, 'TOKEN_EXIST_ERROR', `token ${token} is exist`);
+  },
+  async removeToken(token, projectName) {
+    if (!token) return;
+    await Model.initTokens(projectName);
+    var index = globalTokens[projectName].indexOf(token);
+    if (index !== -1) globalTokens[projectName].splice(index, 1);
+    else throw new RestError(404, 'TOKEN_NOTFOUND_ERROR', `token ${token} is not found`);
   },
   async hasToken(token, projectName) {
     if (!token) return;
-    if (!globalTokens[projectName]) globalTokens[projectName] = (await Project.findOne({name: projectName})).tokens;
+    await Model.initTokens(projectName);
     return globalTokens[projectName].indexOf(token) !== -1;
   },
-  removeTokens(name) {
-    delete globalTokens[name];
+  async removeTokens(projectName) {
+    await Model.initTokens(projectName);
+    delete globalTokens[projectName];
   }
 };
 
