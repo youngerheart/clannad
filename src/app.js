@@ -13,7 +13,10 @@ mongoose.Promise = Promise;
 app.use(async (ctx, next) => {
   const start = new Date();
   // 直接解析出post参数
-  if (ctx.method !== 'GET') ctx.req.body = await parse(ctx) || {};
+  if (ctx.method !== 'GET') {
+    ctx.req.body = await parse.json(ctx) ||
+    await parse.form(ctx) || await parse(ctx) || {};
+  }
   ctx.type = 'json';
   try {
     await next();
