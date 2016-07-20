@@ -57,17 +57,23 @@ router.patch('/admin/:projectName/table/:id', Table.edit);
 // 查询某表详情
 router.get('/admin/:projectName/table/:id', Table.detail);
 
-// 查询某表字段列表
-router.get('/admin/:projectName/table/:id/field', Field.list);
-
 // 给某表加上一个字段，需要 field 本体
 router.post('/admin/:projectName/table/:id/field', Field.add);
+
+// 获取某表的字段列表
+router.get('/admin/:projectName/table/:id/field', Field.list);
+
+// 获取某表的字段总数
+router.get('/admin/:projectName/table/:id/field/count', Field.count);
 
 // 删除某表的一个字段
 router.del('/admin/:projectName/field/:id', Field.del);
 
 // 修改某表的一个字段，可修改其任何内容
 router.patch('/admin/:projectName/field/:id', Field.edit);
+
+// 获取某表的一个字段
+router.get('/admin/:projectName/field/:id', Field.detail);
 
 // 用户接口
 router.use('/:projectName/:tableName', Auth.hasTableAuth, Table.getModel);
