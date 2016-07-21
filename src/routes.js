@@ -11,33 +11,32 @@ const router = new Router();
 // 管理员接口
 
 // 增加一个项目 所需字段: project, domain
-router.post('/admin', Auth.isAdmin, Project.add);
+router.post('/admin', Auth.isRoot, Project.add);
 
 router.use([
-  '/admin/:projectName/table',
-  '/admin/:projectName/field'
-], Auth.isAdmin);
+  '/admin/:projectName'
+], Auth.isRoot);
 
 // 删除项目以及其表与所有资源数据
-router.del('/admin/:projectName', Auth.isAdmin, Project.del);
+router.del('/admin/:projectName', Project.del);
 
 // 修改项目 可修改: name, domain
-router.patch('/admin/:projectName', Auth.isAdmin, Project.edit);
+router.patch('/admin/:projectName', Project.edit);
 
 // 生成一个新的token
-router.post('/admin/:projectName/token', Auth.isAdmin, Token.add);
+router.post('/admin/:projectName/token', Token.add);
 
 // 删除一个 token
-router.del('/admin/:projectName/token/:name', Auth.isAdmin, Token.del);
+router.del('/admin/:projectName/token/:name', Token.del);
 
 // 查看 token 数组
-router.get('/admin/:projectName/token', Auth.isAdmin, Token.list);
+router.get('/admin/:projectName/token', Token.list);
 
 // 查询用户有权限的项目列表
 router.get('/admin', Auth.fetchAuth);
 
 // 查询某项目详情
-router.get('/admin/:projectName', Auth.isAdmin, Project.detail);
+router.get('/admin/:projectName', Project.detail);
 
 // 查询某项目的表列表
 router.get('/admin/:projectName/table', Table.list);

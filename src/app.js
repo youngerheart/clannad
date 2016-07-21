@@ -29,13 +29,18 @@ app.use(async (ctx, next) => {
     if (name) ctx.body = {name, message, errors};
   }
   // add cors
-  if (ctx.params) {
+  if (ctx.params.projectName) {
     var cors = getCORS(ctx.params.projectName);
     ctx.set({
       'access-control-allow-credentials': true,
       'access-control-allow-headers': 'X-Requested-With, Content-Type, X-Token',
       'access-control-allow-methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
       'access-control-allow-origin': cors && cors.length ? cors.join(', ') : '*'
+    });
+  } else if (ctx.req.auth === 'root') {
+    ctx.set({
+      'access-control-allow-credentials': true,
+      'access-control-allow-origin': '*'
     });
   }
   const ms = new Date() - start;
