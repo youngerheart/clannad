@@ -54,7 +54,7 @@ const Tool = {
       .populate(populate || '')
       .limit(limit || 30)
       .skip(offset || 0)
-      .sort(`${asc ? '' : '-'}updatedAt`);
+      .sort(`${asc ? '' : '-'}createdAt`);
   },
   parseArr(str) {
     return str.split('\'').filter(item => item.length > 3);
