@@ -17,6 +17,7 @@ app.use(async (ctx, next) => {
     ctx.req.body = await parse.json(ctx) ||
     await parse.form(ctx) || await parse(ctx) || {};
   }
+  if (ctx.method === 'OPTIONS') ctx.status = 200;
   ctx.type = 'json';
   try {
     await next();
@@ -29,7 +30,7 @@ app.use(async (ctx, next) => {
     if (name) ctx.body = {name, message, errors};
   }
   // add cors
-  var cors = getCORS(ctx.params.projectName);
+  var cors = ctx.params ? getCORS(ctx.params.projectName) : {};
   ctx.set({
     'access-control-allow-credentials': true,
     'access-control-allow-headers': 'X-Requested-With, Content-Type, X-Token',
