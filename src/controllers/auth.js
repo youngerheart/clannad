@@ -28,13 +28,12 @@ const Auth = {
     var projectName = ctx.params.projectName || ctx.req.body.name;
     if (!projectName) throw new RestError(400, 'AUTH_PARAMS_ERR', `missing param \'${ctx.params.projectName ? 'projectName' : 'name'}\'`);
     else if (await dealCheck(ctx, [`${Auth.name}.${projectName.toUpperCase()}.ROOT`])) {
-      ctx.req.auth = 'root';
       return next();
     }
   },
   async fetchAuth(ctx, next) {
     // 获取所有项目，筛选出其中有权限的
-    var projects = await Project.find({}, '-__v').sort('-updatedAt');
+    var projects = await Project.find({}, '-__v').sort('-createdAt');
     var pointers = {};
     var authArr = projects.map((project) => {
       var value = `${Auth.name}.${project.name.toUpperCase()}.ROOT`;
@@ -43,8 +42,7 @@ const Auth = {
     });
     var ownAuth = await Auth.check(ctx, authArr);
     ctx.body = projects.filter(project => ownAuth.indexOf(pointers[project.name]) !== -1);
-    if (ctx.body.length) ctx.req.auth = 'root';
-    else throw new RestError(404, 'AUTH_NOTFOUND_ERR', 'project auths are not found');
+    if (!ctx.body.length) throw new RestError(404, 'AUTH_NOTFOUND_ERR', 'project auths are not found');
   },
   async hasTableAuth(ctx, next) {
     // 获取当前用户对该表的使用权限
