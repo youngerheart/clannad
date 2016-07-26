@@ -19,24 +19,18 @@ const dealCheck = async (ctx, needAuth, isDIY) => {
   return true;
 };
 
-const checkProject = async (ctx, next, type) => {
-  var {id} = ctx.params;
-  if (type !== 'ROOT') checkRoute(id);
-  var projectName = ctx.params.projectName || ctx.req.body.name;
-  if (!projectName) throw new RestError(400, 'AUTH_PARAMS_ERR', `missing param \'${ctx.params.projectName ? 'projectName' : 'name'}\'`);
-  else if (await dealCheck(ctx, [`${Auth.name}.${projectName.toUpperCase()}.${type}`])) return next();
-};
-
 const Auth = {
   name: 'REST',
   async check() {return [];},
-  async isAdmin(ctx, next) {
+  async isRoot(ctx, next) {
     // 检查是否有某项目的管理员权限
-    return await checkProject(ctx, next, 'ROOT');
-  },
-  async isUser(ctx, next) {
-    // 检查是否有某项目的用户权限
-    return await checkProject(ctx, next, 'ADMIN') || await checkProject(ctx, next, 'USER');
+    var {id} = ctx.params;
+    var projectName = ctx.params.projectName || ctx.req.body.name;
+    if (!projectName) throw new RestError(400, 'AUTH_PARAMS_ERR', `missing param \'${ctx.params.projectName ? 'projectName' : 'name'}\'`);
+    else if (await dealCheck(ctx, [`${Auth.name}.${projectName.toUpperCase()}.ROOT`])) {
+      ctx.req.auth = 'root';
+      return next();
+    }
   },
   async fetchAuth(ctx, next) {
     // 获取所有项目，筛选出其中有权限的
@@ -49,6 +43,8 @@ const Auth = {
     });
     var ownAuth = await Auth.check(ctx, authArr);
     ctx.body = projects.filter(project => ownAuth.indexOf(pointers[project.name]) !== -1);
+    if (ctx.body.length) ctx.req.auth = 'root';
+    else throw new RestError(404, 'AUTH_NOTFOUND_ERR', 'project auths are not found');
   },
   async hasTableAuth(ctx, next) {
     // 获取当前用户对该表的使用权限
