@@ -43,7 +43,7 @@ const Tool = {
   getQuery(params, fields) {
     var query = {};
     fields.forEach((item) => {
-      if (params[item]) query[item] = params[item];
+      if (params[item] !== undefined) query[item] = params[item];
     });
     return query;
   },
