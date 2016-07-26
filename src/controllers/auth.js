@@ -42,7 +42,6 @@ const Auth = {
     });
     var ownAuth = await Auth.check(ctx, authArr);
     ctx.body = projects.filter(project => ownAuth.indexOf(pointers[project.name]) !== -1);
-    if (!ctx.body.length) throw new RestError(404, 'AUTH_NOTFOUND_ERR', 'project auths are not found');
   },
   async hasTableAuth(ctx, next) {
     // 获取当前用户对该表的使用权限
