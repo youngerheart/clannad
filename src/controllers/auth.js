@@ -1,6 +1,6 @@
 import Project from '../models/project';
 import RestError from '../services/resterror';
-import {getAuths, hasToken} from '../services/model';
+import {getAuths, hasToken, getCORS} from '../services/model';
 
 const checkRoute = (param) => {
   if (param && (param === 'admin' || param === 'table')) throw new RestError(400, 'ROUTE_PARAMS_ERR', 'projectName unexpand \'admin\' or \'table\'');
@@ -26,10 +26,19 @@ const Auth = {
     // 检查是否有某项目的管理员权限
     var {id} = ctx.params;
     var projectName = ctx.params.projectName || ctx.req.body.name;
+    Auth.setCORS(ctx, true);
     if (!projectName) throw new RestError(400, 'AUTH_PARAMS_ERR', `missing param \'${ctx.params.projectName ? 'projectName' : 'name'}\'`);
-    else if (await dealCheck(ctx, [`${Auth.name}.${projectName.toUpperCase()}.ROOT`])) {
-      return next();
-    }
+    else if (await dealCheck(ctx, [`${Auth.name}.${projectName.toUpperCase()}.ROOT`])) return next();
+  },
+  setCORS(ctx, isRoot) {
+    // add cors
+    var cors = isRoot || !ctx.params ? {} : getCORS(ctx.params.projectName);
+    ctx.set({
+      'access-control-allow-credentials': true,
+      'access-control-allow-headers': 'X-Requested-With, Content-Type, X-Token',
+      'access-control-allow-methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+      'access-control-allow-origin': cors && cors.length ? cors.join(', ') : ctx.headers.origin
+    });
   },
   async fetchAuth(ctx, next) {
     // 获取所有项目，筛选出其中有权限的
@@ -41,6 +50,7 @@ const Auth = {
       return value;
     });
     var ownAuth = await Auth.check(ctx, authArr);
+    Auth.setCORS(ctx, true);
     ctx.body = projects.filter(project => ownAuth.indexOf(pointers[project.name]) !== -1);
   },
   async hasTableAuth(ctx, next) {
@@ -50,6 +60,7 @@ const Auth = {
     var {projectName, tableName} = ctx.params;
     checkRoute(projectName);
     var auth = (await getAuths(projectName))[`${projectName}.${tableName}`];
+    Auth.setCORS(ctx);
     if (!auth) throw new RestError(404, 'AUTH_NOTFOUND_ERR', 'table auths are not found');
     if ((await dealCheck(ctx, [`${Auth.name}.${projectName.toUpperCase()}.ROOT`], true) ||
       await dealCheck(ctx, [`${Auth.name}.${projectName.toUpperCase()}.ADMIN`], true))) {
