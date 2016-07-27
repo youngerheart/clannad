@@ -23,10 +23,10 @@ const Auth = {
   name: 'REST',
   async check() {return [];},
   async isRoot(ctx, next) {
+    Auth.setCORS(ctx, true);
     // 检查是否有某项目的管理员权限
     var {id} = ctx.params;
     var projectName = ctx.params.projectName || ctx.req.body.name;
-    Auth.setCORS(ctx, true);
     if (!projectName) throw new RestError(400, 'AUTH_PARAMS_ERR', `missing param \'${ctx.params.projectName ? 'projectName' : 'name'}\'`);
     else if (await dealCheck(ctx, [`${Auth.name}.${projectName.toUpperCase()}.ROOT`])) return next();
   },
@@ -41,6 +41,7 @@ const Auth = {
     });
   },
   async fetchAuth(ctx, next) {
+    Auth.setCORS(ctx, true);
     // 获取所有项目，筛选出其中有权限的
     var projects = await Project.find({}, '-__v').sort('-createdAt');
     var pointers = {};
@@ -50,17 +51,16 @@ const Auth = {
       return value;
     });
     var ownAuth = await Auth.check(ctx, authArr);
-    Auth.setCORS(ctx, true);
     ctx.body = projects.filter(project => ownAuth.indexOf(pointers[project.name]) !== -1);
   },
   async hasTableAuth(ctx, next) {
+    Auth.setCORS(ctx);
     // 获取当前用户对该表的使用权限
     var authErr = new RestError(403, 'AUTH_ERR', 'permission denied');
     var method = ctx.method.toLowerCase();
     var {projectName, tableName} = ctx.params;
     checkRoute(projectName);
     var auth = (await getAuths(projectName))[`${projectName}.${tableName}`];
-    Auth.setCORS(ctx);
     if (!auth) throw new RestError(404, 'AUTH_NOTFOUND_ERR', 'table auths are not found');
     if ((await dealCheck(ctx, [`${Auth.name}.${projectName.toUpperCase()}.ROOT`], true) ||
       await dealCheck(ctx, [`${Auth.name}.${projectName.toUpperCase()}.ADMIN`], true))) {
