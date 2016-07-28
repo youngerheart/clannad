@@ -2,7 +2,7 @@ import Table from '../models/table';
 import Field from '../models/field';
 import RestError from '../services/resterror';
 import {setCache, removeCaches} from '../services/model';
-import {getQuery, getList} from '../services/tools';
+import {getQuery, getList, parseNull} from '../services/tools';
 
 const select = '-__v -table';
 
@@ -11,7 +11,7 @@ export default {
     var {id, projectName} = ctx.params;
     var table = await Table.findById(id);
     if (!table) throw new RestError(404, 'TABLE_NOTFOUND_ERR', `table ${id} is not found`);
-    var query = getQuery(ctx.req.body, ['name', 'type', 'required', 'unique', 'default', 'validExp', 'index', 'ref']);
+    var query = getQuery(ctx.req.body, ['name', 'type', 'required', 'unique', 'default', 'show', 'validExp', 'index', 'ref']);
     // 一个表中的字段不可重复
     var field = await Field.findOne({table: id, name: query.name});
     if (field) throw new RestError(400, 'FIELD_EXIST_ERR', `field ${query.name} is existed in table ${table.name}`);
@@ -34,7 +34,7 @@ export default {
   },
   async edit(ctx) {
     var {id, projectName} = ctx.params;
-    var query = getQuery(ctx.req.body, ['name', 'type', 'required', 'unique', 'default', 'validExp', 'show']);
+    var query = parseNull(getQuery(ctx.req.body, ['name', 'type', 'required', 'unique', 'default', 'show', 'validExp', 'index', 'ref']));
     var field = await Field.findById(id);
     var table = await Table.findById(field.table);
     if (!table) throw new RestError(404, 'TABLE_NOTFOUND_ERR', `table ${field.table} is not found`);

@@ -1,5 +1,5 @@
 import RestError from '../services/resterror';
-import {getList} from '../services/tools';
+import {getList, parseNull} from '../services/tools';
 import {getShows} from '../services/model';
 
 const getSelectStr = (name, auth) => {
@@ -17,7 +17,7 @@ const getSelectStr = (name, auth) => {
 export default {
   async add(ctx) {
     var {model: Model, body: params} = ctx.req;
-    var model = new Model(params);
+    var model = new Model(parseNull(params));
     await model.save();
     ctx.body = {id: model._id};
   },
@@ -29,7 +29,7 @@ export default {
   async edit(ctx) {
     var {model: Model, body: params} = ctx.req;
     var {id} = ctx.params;
-    await Model.updateById(id, params);
+    await Model.updateById(id, parseNull(params));
   },
   async list(ctx) {
     var {model: Model} = ctx.req;

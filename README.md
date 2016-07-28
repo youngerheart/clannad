@@ -95,6 +95,8 @@ about all table field's detail, view [DB docs](https://github.com/youngerheart/c
 
 ### General query params
 
+`populate` a stringArray about which field you want to populate, such as `field1,field2...`
+
 *disabled while query by id*
 
 `limit` default 30
