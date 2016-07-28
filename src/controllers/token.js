@@ -7,8 +7,8 @@ export default {
   async add(ctx) {
     var {projectName} = ctx.params;
     var name = Math.random().toString(36).substr(2,10);
-    await Project.editField({name: projectName}, 'tokens', name, true);
     await setToken(name, projectName);
+    await Project.editField({name: projectName}, 'tokens', name, true);
     ctx.body = {name};
   },
   async del(ctx) {
