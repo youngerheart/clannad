@@ -25,9 +25,10 @@
 | table | ObjectId | 所属表 |
 | name | String | 字段名 |
 | show | BooleanObject {admin, user, vistor} | 该字段每种角色是否可见 |
-| type | Mixed | 字段数据类型 |
+| type | Mixed | 字段数据类型, 枚举: String, Number, Object, Date, Buffer, Boolean, Mixed, ObjectId, Array, ObjectIdArray |
 | required | Boolean | 字段是否非空 |
 | unique | Boolean | 字段是否唯一 |
 | default | Mixed | 字段默认值 |
 | validExp | RegExp | 字段验证表达式 |
 | index | Boolean | 是否需要建立索引 |
+| ref | String | 需要ref的表名 |

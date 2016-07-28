@@ -19,7 +19,7 @@ const FieldSchema = new Schema({
   },
   type: {
     type: String,
-    enum: ['String', 'Number', 'Date', 'Buffer', 'Boolean', 'Mixed', 'ObjectId', 'Array'],
+    enum: ['String', 'Number', 'Object', 'Date', 'Buffer', 'Boolean', 'Mixed', 'ObjectId', 'Array', 'ObjectIdArray'],
     required: true
   },
   show: {

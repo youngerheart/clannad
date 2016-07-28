@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
-const Schema = mongoose.Schema;
 import RestError from '../services/resterror';
 import Project from '../models/project';
 import {getQuery, dealSchema} from './tools';
+const {Schema, Types} = mongoose;
 
 // 储存当前所有的Model
 var caches = null;
@@ -17,22 +17,44 @@ var cors = {};
 // 储存所有项目的token数组
 var globalTokens = {};
 
+// 首字母大写
+var upper = (word) => word.replace(/(\w)/, (v) => v.toUpperCase());
+
 const getField = (data) => {
   data = JSON.parse(JSON.stringify(data));
   let field = {};
-  // 处理类型
+  // 处理类型, 默认值
   switch (data.type) {
     case 'ObjectId':
     case 'Mixed':
       field.type = Schema.Types[data.type];
+      if (data.default) field.default = Types[data.type](data.default);
       break;
+    case 'ObjectIdArray':
+      field.type = Schema.Types.ObjectId;
+      if (data.default) {
+        if (typeof data.default === 'string') data.default = JSON.parse(data.default);
+        field.default = data.default.map((item) => Types.ObjectId(item));
+      }
+      break;
+    case 'Object':
+    case 'Array':
+      field.type = global[data.type];
+      if (data.default) {
+        if (typeof data.default === 'string') data.default = JSON.parse(data.default);
+        field.default = data.default;
+      }
     default:
       field.type = global[data.type];
+      if (data.default) field.default = data.default;
       break;
   }
   // 处理正则
   if (data.validExp) field.validate = new RegExp(data.validExp);
-  let others = getQuery(data, ['required', 'unique', 'default', 'ref', 'index']);
+  // 处理ref
+  if (data.ref) field.ref = data.ref;
+  let others = getQuery(data, ['required', 'unique', 'index']);
+  if (data.type === 'ObjectIdArray') return [{...field, ...others}];
   return {...field, ...others};
 };
 
@@ -62,6 +84,7 @@ const Model = {
         show[field.name] = JSON.parse(JSON.stringify(field.show));
       });
       let name = `${project.name}.${table.name}`;
+      console.log(name, fields);
       globalFields[name] = fields;
       shows[name] = show;
       setModel(new Schema(fields, {timestamps: true}), name);
@@ -82,7 +105,7 @@ const Model = {
     shows[name][fieldData.name] = JSON.parse(JSON.stringify(fieldData.show));
     var model = setModel(new Schema(fields, {timestamps: true}), name);
     // 更新该数据表的所有数据，为该字段赋初值
-    await model.update({[fieldData.name]: null}, {[fieldData.name]: fields[fieldData.name].default || ''});
+    await model.update({[fieldData.name]: null}, {[fieldData.name]: fields[fieldData.name].default || null});
   },
   async removeCaches(fieldData, projectName, tableName) {
     if (!caches) await Model.initCaches(projectName);
