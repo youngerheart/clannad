@@ -52,8 +52,8 @@ const Tool = {
     var params = fields.length ? Tool.getQuery(params, fields) : params;
     return model.find(params, select)
       .populate(populate || '')
-      .limit(limit || 30)
-      .skip(offset || 0)
+      .limit(parseInt(limit) || 30)
+      .skip(parseInt(offset) || 0)
       .sort(`${asc ? '' : '-'}createdAt`);
   },
   parseArr(str) {
