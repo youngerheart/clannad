@@ -11,7 +11,7 @@ You will get data you needed, without back-end develop, just APIs.
 
 ## How it works
 
-![how it works](http://i2.piimg.com/567571/404987cefe28abf7.png)
+![how it works](http://ww3.sinaimg.cn/large/0060lm7Tgw1f69kgcvdelj30ry0q4ags.jpg)
 
 ## Usage
 
@@ -44,7 +44,19 @@ clannad.app.listen(3000, () => {
 
 ### About Auth
 
-**root** could use APIs about own project (admin.project), project's table (admin.table), and table's field (admin.field).
+**root**
+
+could use APIs about own project (admin.projects)
+
+* project's CORS configure with every role (field domains).
+
+project's table (admin.tables)
+
+* table's availability with each role (field adminAuth, userAuth and visitorAuth).
+
+and table's field (admin.fields)
+
+* field's visibility with each role (field show).
 
 **admin** admin and root could use APIs about ${projectName}.${tableName} configured by root, depend on config 'adminAuth' in admin.table.
 
@@ -53,8 +65,6 @@ clannad.app.listen(3000, () => {
 **visitor** could use APIs about ${projectName}.${tableName} configured by root, depend on config 'visitorAuth' in admin.table.
 
 **token** while a request header own field 'X-Token', and it's value exist in that admin.project.tokens, that request will be regarded as a user's request.
-
-**field visibile** depend on config 'show' in admin.field.
 
 ## Develop & Test
 
@@ -91,7 +101,7 @@ about all table field's detail, view [DB docs](https://github.com/youngerheart/c
 
 `offset` default 0
 
-`asc` default sort is `-updatedAt`, use `asc=1` to make sort be `updateAt`
+`asc` default sort is `-createdAt`, use `asc=1` to make sort be `createdAt`
 
 ### General result field
 
