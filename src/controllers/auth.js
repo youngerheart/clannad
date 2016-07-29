@@ -22,6 +22,9 @@ const dealCheck = async (ctx, needAuth, isDIY) => {
 const Auth = {
   name: 'REST',
   async check() {return [];},
+  async isMaster(ctx, next) {
+    if (await dealCheck(ctx, [`${Auth.name}.MASTER`])) return next();
+  },
   async isRoot(ctx, next) {
     Auth.setCORS(ctx, true);
     // 检查是否有某项目的管理员权限

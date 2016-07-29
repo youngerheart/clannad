@@ -17,8 +17,7 @@ const config = {
 const TableSchema = new Schema({
   name: {
     type: String,
-    required: true,
-    unique: true
+    required: true
   },
   project: {
     type: Schema.Types.ObjectId,
