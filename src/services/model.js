@@ -41,9 +41,11 @@ const getField = (data) => {
         if (typeof data.default === 'string') data.default = JSON.parse(data.default);
         field.default = data.default;
       }
+      break;
     default:
       field.type = global[data.type];
       if (data.default) field.default = data.default;
+      break;
   }
   // 处理正则
   if (data.validExp) field.validate = new RegExp(data.validExp);

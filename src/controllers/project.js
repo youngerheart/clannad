@@ -15,9 +15,9 @@ export default {
     var project = await Project.findOne({name: projectName});
     if (!project) throw new RestError(404, 'PROJECT_NOTFOUND_ERR', `project ${projectName} is not found`);
     if (project.tables && project.tables.length) throw new RestError(400, 'PROJECT_NOTEMPTY_ERR', 'tables array is not empty');
-    await project.remove();
     await removeTokens(projectName);
     await removeCORS(projectName);
+    await project.remove();
   },
   async edit(ctx) {
     var fields = getQuery(ctx.req.body, ['domains']);
