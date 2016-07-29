@@ -1,12 +1,10 @@
 import Project from '../models/project';
-import RestError from '../services/resterror';
-import {getQuery} from '../services/tools';
 import {setToken, removeToken} from '../services/model';
 
 export default {
   async add(ctx) {
     var {projectName} = ctx.params;
-    var name = Math.random().toString(36).substr(2,10);
+    var name = Math.random().toString(36).substr(2, 10);
     await setToken(name, projectName);
     await Project.editField({name: projectName}, 'tokens', name, true);
     ctx.body = {name};

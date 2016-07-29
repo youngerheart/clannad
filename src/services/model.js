@@ -17,9 +17,6 @@ var cors = {};
 // 储存所有项目的token数组
 var globalTokens = {};
 
-// 首字母大写
-var upper = (word) => word.replace(/(\w)/, (v) => v.toUpperCase());
-
 const getField = (data) => {
   data = JSON.parse(JSON.stringify(data));
   let field = {};
@@ -47,7 +44,6 @@ const getField = (data) => {
     default:
       field.type = global[data.type];
       if (data.default) field.default = data.default;
-      break;
   }
   // 处理正则
   if (data.validExp) field.validate = new RegExp(data.validExp);
@@ -84,7 +80,6 @@ const Model = {
         show[field.name] = JSON.parse(JSON.stringify(field.show));
       });
       let name = `${project.name}.${table.name}`;
-      console.log(name, fields);
       globalFields[name] = fields;
       shows[name] = show;
       setModel(new Schema(fields, {timestamps: true}), name);
