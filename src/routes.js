@@ -1,4 +1,5 @@
 import Router from 'koa-router';
+import mongoose from 'mongoose';
 import Auth from './controllers/auth';
 import Project from './controllers/project';
 import Token from './controllers/token';
@@ -9,6 +10,11 @@ import Field from './controllers/field';
 const router = new Router();
 
 // 管理员接口
+
+// 最高权限者删除所有数据，包括admin.xx
+router.del('/admin', Auth.isMaster, async (ctx) => {
+  await mongoose.connection.db.dropDatabase();
+});
 
 // 增加一个项目 所需字段: project, domain
 router.post('/admin', Auth.isRoot, Project.add);
