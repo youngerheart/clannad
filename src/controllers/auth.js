@@ -35,12 +35,14 @@ const Auth = {
   },
   setCORS(ctx, isRoot) {
     // add cors
-    var cors = isRoot || !ctx.params ? {} : getCORS(ctx.params.projectName);
+    var cors = isRoot || !ctx.params ? null : getCORS(ctx.params.projectName);
+    var origin = '';
+    if (cors && cors.indexOf(ctx.headers.origin) !== -1 || !cors) origin = ctx.headers.origin;
     ctx.set({
       'access-control-allow-credentials': true,
       'access-control-allow-headers': 'X-Requested-With, Content-Type, X-Token',
       'access-control-allow-methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-      'access-control-allow-origin': cors && cors.length ? cors.join(', ') : ctx.headers.origin
+      'access-control-allow-origin': origin
     });
   },
   async fetchAuth(ctx, next) {

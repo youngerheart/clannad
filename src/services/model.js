@@ -145,7 +145,7 @@ const Model = {
     return shows[name];
   },
   getCORS(name) {
-    return name ? cors[name] : {};
+    return name ? cors[name] : [];
   },
   removeCORS(name) {
     delete cors[name];
