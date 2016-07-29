@@ -8,6 +8,7 @@ export default {
     var fields = getQuery(ctx.req.body, ['name', 'domains']);
     var project = new Project(fields);
     await project.save();
+    if (fields.domains) await initAuths(fields.name);
     ctx.body = {id: project._id};
   },
   async del(ctx) {

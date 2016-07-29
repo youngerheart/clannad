@@ -22,7 +22,7 @@ export default {
     project.tables.push(table._id);
     await table.save();
     await project.save();
-    setAuth(table, projectName);
+    await setAuth(table, projectName);
     ctx.body = {id: table._id};
   },
   async del(ctx) {
@@ -43,7 +43,7 @@ export default {
     var table = await Table.findById(id);
     for (let key in query) table[key] = query[key];
     await table.save();
-    setAuth(table, projectName);
+    await setAuth(table, projectName);
   },
   async list(ctx) {
     var {projectName} = ctx.params;

@@ -4,6 +4,8 @@ import Project from '../models/project';
 import {getQuery, dealSchema} from './tools';
 const {Schema, Types} = mongoose;
 
+// 目前暂时处理为：每次均重新读取，之后写redius逻辑
+
 // 储存当前所有的Model
 var caches = null;
 // 储存所有Model需要的字段信息
@@ -88,29 +90,34 @@ const Model = {
     });
   },
   async getCaches(projectName) {
-    if (!caches) await Model.initCaches(projectName);
+    // if (!caches) await Model.initCaches(projectName);
+    await Model.initCaches(projectName);
     return caches;
   },
   async setCache(fieldData, projectName, tableName) {
-    if (!caches) await Model.initCaches(projectName);
-    var name = `${projectName}.${tableName}`;
-    var fields = globalFields[name];
-    fields[fieldData.name] = getField(fieldData);
-    globalFields[name] = fields;
-    // 更新显示权限
-    if (!shows[name]) shows[name] = {};
-    shows[name][fieldData.name] = JSON.parse(JSON.stringify(fieldData.show));
-    var model = setModel(new Schema(fields, {timestamps: true}), name);
-    // 更新该数据表的所有数据，为该字段赋初值
-    await model.update({[fieldData.name]: null}, {[fieldData.name]: fields[fieldData.name].default || null});
+    // if (!caches) await Model.initCaches(projectName);
+    await Model.initCaches(projectName);
+    // else {
+    //   var name = `${projectName}.${tableName}`;
+    //   var fields = globalFields[name];
+    //   fields[fieldData.name] = getField(fieldData);
+    //   globalFields[name] = fields;
+    //   // 更新显示权限
+    //   if (!shows[name]) shows[name] = {};
+    //   shows[name][fieldData.name] = JSON.parse(JSON.stringify(fieldData.show));
+    //   var model = setModel(new Schema(fields, {timestamps: true}), name);
+    //   // 更新该数据表的所有数据，为该字段赋初值
+    //   await model.update({[fieldData.name]: null}, {[fieldData.name]: fields[fieldData.name].default || null});
+    // }
   },
   async removeCaches(fieldData, projectName, tableName) {
-    if (!caches) await Model.initCaches(projectName);
+    // if (!caches) await Model.initCaches(projectName);
+    await Model.initCaches(projectName);
     var name = `${projectName}.${tableName}`;
     var fields = globalFields[name];
     delete fields[fieldData.name];
     // 删除显示权限
-    if (shows[name] && shows[name][fieldData.name]) delete shows[name][fieldData.name];
+    // if (shows[name] && shows[name][fieldData.name]) delete shows[name][fieldData.name];
     var model = setModel(new Schema(fields, {timestamps: true}), name);
     // 更新该数据表中所有数据，删除该字段
     await model.update({[fieldData.name]: {$ne: null}}, {[fieldData.name]: null});
@@ -126,16 +133,19 @@ const Model = {
     });
   },
   async getAuths(projectName) {
-    if (!auths) await Model.initAuths(projectName);
+    // if (!auths) await Model.initAuths(projectName);
+    await Model.initAuths(projectName);
     return JSON.parse(JSON.stringify(auths));
   },
   async setAuth(table, projectName) {
     var {visitorAuth, userAuth, adminAuth} = table;
-    if (!auths) await Model.initAuths(projectName);
+    // if (!auths) await Model.initAuths(projectName);
+    await Model.initAuths(projectName);
     auths[`${projectName}.${table.name}`] = {visitorAuth, userAuth, adminAuth};
   },
   async removeAuth(table, projectName) {
-    if (!auths) await Model.initAuths(projectName);
+    // if (!auths) await Model.initAuths(projectName);
+    await Model.initAuths(projectName);
     delete auths[`${projectName}.${table.name}`];
   },
   getShows(name) {
@@ -148,7 +158,8 @@ const Model = {
     delete cors[name];
   },
   async initTokens(projectName) {
-    if (!globalTokens[projectName]) globalTokens[projectName] = (await Project.findOne({name: projectName})).tokens;
+    // if (!globalTokens[projectName]) globalTokens[projectName] = (await Project.findOne({name: projectName})).tokens;
+    globalTokens[projectName] = (await Project.findOne({name: projectName})).tokens;
   },
   async setToken(token, projectName) {
     if (!token) return;
