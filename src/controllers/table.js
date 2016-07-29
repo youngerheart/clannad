@@ -49,7 +49,7 @@ export default {
     var {projectName} = ctx.params;
     var project = await Project.findOne({name: projectName});
     if (!project) throw new RestError(404, 'PROJECT_NOTFOUND_ERR', `project ${projectName} is not found`);
-    var query = {project: project._id, ...ctx.query}
+    var query = {project: project._id, ...ctx.query};
     ctx.body = await getList({
       model: Table,
       select,
@@ -60,7 +60,7 @@ export default {
     var {projectName} = ctx.params;
     var project = await Project.findOne({name: projectName});
     if (!project) throw new RestError(404, 'PROJECT_NOTFOUND_ERR', `project ${projectName} is not found`);
-    var query = {project: project._id, ...ctx.query}
+    var query = {project: project._id, ...ctx.query};
     var count = await Table.count(query);
     ctx.body = {count};
   },

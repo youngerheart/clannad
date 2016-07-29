@@ -5,7 +5,7 @@ import {dealSchema} from './../services/tools';
 const defaultBoolean = {
   type: Boolean,
   default: false
-}
+};
 
 const config = {
   get: defaultBoolean,

@@ -52,7 +52,7 @@ export default {
     });
   },
   async count(ctx) {
-    var query = {table: ctx.params.id, ...ctx.query}
+    var query = {table: ctx.params.id, ...ctx.query};
     var count = await Field.count(query);
     ctx.body = {count};
   },

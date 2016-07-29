@@ -28,7 +28,6 @@ const Auth = {
   async isRoot(ctx, next) {
     Auth.setCORS(ctx, true);
     // 检查是否有某项目的管理员权限
-    var {id} = ctx.params;
     var projectName = ctx.params.projectName || ctx.req.body.name;
     if (!projectName) throw new RestError(400, 'AUTH_PARAMS_ERR', `missing param \'${ctx.params.projectName ? 'projectName' : 'name'}\'`);
     else if (await dealCheck(ctx, [`${Auth.name}.${projectName.toUpperCase()}.ROOT`])) return next();
