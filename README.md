@@ -32,9 +32,15 @@ clannad.configDB((mongoose) => {
 clannad.auth(async (ctx, authArr) => {
   // return authArr by your auth system, or return itself while don't need auth system
   // each authcode is like '${PREFIX}.${PROJECTNAME}.${ROLENAME}'
-  // rolename enum as 'root', 'admin', 'user'
+  // rolename enum as 'master', 'root', 'admin', 'user'
   return await check(ctx, authArr);
 }, 'REST'); // prefix for each authcode, default 'REST'
+
+// router interface
+// with prefix '/:projectName/:tableName/extra/:methodName'
+clannad.router['get, post...']((ctx) => {
+  // dealing mongoose model with ctx.req.model
+});
 
 clannad.app.use(...) // clannad's koa app
 clannad.app.listen(3000, () => {
