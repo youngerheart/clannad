@@ -1,14 +1,14 @@
 import Table from '../models/table';
 import Field from '../models/field';
 import RestError from '../services/resterror';
-import {setCache, removeCaches} from '../services/model';
+import {removeCaches} from '../services/model';
 import {getQuery, getList, parseNull} from '../services/tools';
 
 const select = '-__v -table';
 
 export default {
   async add(ctx) {
-    var {id, projectName} = ctx.params;
+    var {id} = ctx.params;
     var table = await Table.findById(id);
     if (!table) throw new RestError(404, 'TABLE_NOTFOUND_ERR', `table ${id} is not found`);
     var query = getQuery(ctx.req.body, ['name', 'type', 'required', 'unique', 'default', 'show', 'validExp', 'index', 'ref']);
@@ -21,7 +21,6 @@ export default {
     table.fields.push(field._id);
     await field.save();
     await table.save();
-    await setCache(field, projectName, table.name);
     ctx.body = {id: field._id};
   },
   async del(ctx) {
@@ -33,14 +32,13 @@ export default {
     await field.remove();
   },
   async edit(ctx) {
-    var {id, projectName} = ctx.params;
+    var {id} = ctx.params;
     var query = parseNull(getQuery(ctx.req.body, ['name', 'type', 'required', 'unique', 'default', 'show', 'validExp', 'index', 'ref']));
     var field = await Field.findById(id);
     var table = await Table.findById(field.table);
     if (!table) throw new RestError(404, 'TABLE_NOTFOUND_ERR', `table ${field.table} is not found`);
     for (let key in query) {field[key] = query[key];}
     await field.save();
-    await setCache(field, projectName, table.name);
   },
   async list(ctx) {
     var {id: table} = ctx.params;

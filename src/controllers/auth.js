@@ -26,15 +26,15 @@ const Auth = {
     if (await dealCheck(ctx, [`${Auth.name}.MASTER`])) return next();
   },
   async isRoot(ctx, next) {
-    Auth.setCORS(ctx, true);
+    await Auth.setCORS(ctx, true);
     // 检查是否有某项目的管理员权限
     var projectName = ctx.params.projectName || ctx.req.body.name;
     if (!projectName) throw new RestError(400, 'AUTH_PARAMS_ERR', `missing param \'${ctx.params.projectName ? 'projectName' : 'name'}\'`);
     else if (await dealCheck(ctx, [`${Auth.name}.${projectName.toUpperCase()}.ROOT`])) return next();
   },
-  setCORS(ctx, isRoot) {
+  async setCORS(ctx, isRoot) {
     // add cors
-    var cors = isRoot || !ctx.params ? null : getCORS(ctx.params.projectName);
+    var cors = isRoot || !ctx.params ? null : await getCORS(ctx.params.projectName);
     var origin = '';
     if (cors && cors.indexOf(ctx.headers.origin) !== -1 || !cors) origin = ctx.headers.origin;
     ctx.set({
@@ -45,7 +45,7 @@ const Auth = {
     });
   },
   async fetchAuth(ctx, next) {
-    Auth.setCORS(ctx, true);
+    await Auth.setCORS(ctx, true);
     // 获取所有项目，筛选出其中有权限的
     var projects = await Project.find({}, '-__v').sort('-createdAt');
     var pointers = {};
@@ -58,7 +58,7 @@ const Auth = {
     ctx.body = projects.filter(project => ownAuth.indexOf(pointers[project.name]) !== -1);
   },
   async hasTableAuth(ctx, next) {
-    Auth.setCORS(ctx);
+    await Auth.setCORS(ctx);
     // 获取当前用户对该表的使用权限
     var authErr = new RestError(403, 'AUTH_ERR', 'permission denied');
     var method = ctx.method.toLowerCase();

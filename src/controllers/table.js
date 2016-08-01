@@ -4,7 +4,7 @@ import Table from '../models/table';
 import Field from '../models/field';
 import RestError from '../services/resterror';
 import {getQuery, getList} from '../services/tools';
-import {getCaches, removeAuth, setAuth} from '../services/model';
+import {getCaches} from '../services/model';
 
 const select = '-__v -project';
 
@@ -22,7 +22,6 @@ export default {
     project.tables.push(table._id);
     await table.save();
     await project.save();
-    setAuth(table, projectName);
     ctx.body = {id: table._id};
   },
   async del(ctx) {
@@ -35,15 +34,13 @@ export default {
     await table.remove();
     await Project.editField({name: projectName}, 'tables', mongoose.Types.ObjectId(id));
     await Field.remove({table: table._id});
-    await removeAuth(table, projectName);
   },
   async edit(ctx) {
-    var {id, projectName} = ctx.params;
+    var {id} = ctx.params;
     var query = getQuery(ctx.req.body, ['adminAuth', 'userAuth', 'visitorAuth', 'name']);
     var table = await Table.findById(id);
     for (let key in query) table[key] = query[key];
     await table.save();
-    setAuth(table, projectName);
   },
   async list(ctx) {
     var {projectName} = ctx.params;
