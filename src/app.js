@@ -1,11 +1,15 @@
 import Koa from 'koa';
 import mongoose from 'mongoose';
 import parse from 'co-body';
+import Router from 'koa-router';
 
 import Routes from './routes';
 import Auth from './controllers/auth';
+import Table from './controllers/table';
 
 const app = new Koa();
+const userRouters = new Router({prefix: '/:projectName/:tableName/extra/:methodName'});
+userRouters.use('/', Auth.hasTableAuth, Table.getModel);
 
 mongoose.Promise = Promise;
 
@@ -36,6 +40,7 @@ app.use(async (ctx, next) => {
 });
 
 app.use(Routes.routes());
+app.use(userRouters.routes());
 
 export default {
   app,
@@ -45,5 +50,6 @@ export default {
   },
   configDB(callback) {
     callback(mongoose);
-  }
+  },
+  router: userRouters
 };
