@@ -1,12 +1,8 @@
 {
   "name": "clannad",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "data storage service with RESTful APIs.",
-  "main": "dist/app.js",
-  "files": [
-    "README.md",
-    "dist/"
-  ],
+  "main": "app.js",
   "keywords": [
     "RESTful",
     "server",

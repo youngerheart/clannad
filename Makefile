@@ -9,6 +9,7 @@ dev: install
 
 deploy:
 	@babel src --out-dir dist
+	@cp package.json dist && cp README.md dist
 
 publish: deploy
-	@npm publish
+	@cd dist && npm publish && cd ..
