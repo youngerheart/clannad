@@ -5,7 +5,7 @@ install:
 dev: install
 	@rm -rf dist
 	@eslint --fix app.js route.js src/**/*.js test/**/*.js
-	@nodemon src/muti.js
+	@nodemon muti.js
 
 deploy:
 	@babel src --out-dir dist

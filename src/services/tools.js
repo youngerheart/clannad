@@ -48,14 +48,14 @@ const Tool = {
     return query;
   },
   async getList({model, populate, query = {}, select = '', fields = []}) {
-    var {limit, offset, asc, populate: populateStr, ...params} = query;
+    var {limit, offset, asc, populate: populateStr, sort, ...params} = query;
     populate = populateStr ? populateStr.split(',') : populate;
     var params = fields.length ? Tool.getQuery(params, fields) : params;
     return model.find(params, select)
       .populate(populate || '')
       .limit(parseInt(limit) || 30)
       .skip(parseInt(offset) || 0)
-      .sort(`${asc ? '' : '-'}createdAt`);
+      .sort(`${asc ? '' : '-'}${sort || 'createdAt'}`);
   },
   parseArr(str) {
     return str.split('\'').filter(item => item.length > 3);

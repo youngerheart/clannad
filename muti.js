@@ -2,7 +2,7 @@ var cfork = require('cfork');
 var util = require('util');
 
 cfork({
-  exec: './src/test.js',
+  exec: './test.js',
   count: require('os').cpus().length
 }).on('fork', function(worker) {
   console.warn('[%s] [worker:%d] new worker start', new Date(), worker.process.pid); //eslint-disable-line

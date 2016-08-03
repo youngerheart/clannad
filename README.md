@@ -2,7 +2,7 @@
 
 #clannad
 
-manage RESTful APIs for micro projects.
+data storage service with RESTful APIs.
 
 You will get data you needed, without back-end develop, just APIs.
 
@@ -109,7 +109,9 @@ about all table field's detail, view [DB docs](https://github.com/youngerheart/c
 
 `offset` default 0
 
-`asc` default sort is `-createdAt`, use `asc=1` to make sort be `createdAt`
+`sort` use which field to sort, default `createAt`
+
+`asc` default sort is `-${sort}`, use `asc=1` to make sort be `${sort}`
 
 ### General result field
 
