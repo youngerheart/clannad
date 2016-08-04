@@ -34,6 +34,7 @@ const Auth = {
   },
   async setCORS(ctx, isRoot) {
     // add cors
+    if (!ctx.headers.origin) return;
     var cors = isRoot || !ctx.params ? null : await getCORS(ctx.params.projectName);
     var origin = '';
     if (cors && cors.indexOf(ctx.headers.origin) !== -1 || !cors) origin = ctx.headers.origin;
