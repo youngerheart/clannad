@@ -15,17 +15,22 @@ mongoose.Promise = Promise;
 
 app.use(async (ctx, next) => {
   const start = new Date();
-  // 直接解析出post参数
-  if (ctx.method !== 'GET') {
-    ctx.req.body = await parse.json(ctx) ||
-    await parse.form(ctx) || await parse(ctx) || {};
-  }
-  if (ctx.method === 'OPTIONS') {
-    Auth.setCORS(ctx, true);
-    ctx.status = 200;
-  }
   ctx.type = 'json';
   try {
+    if (ctx.method === 'OPTIONS') {
+      await Auth.setCORS(ctx, true);
+      ctx.status = 200;
+    }
+    // 直接解析出post参数, 这里的co-body 的 parse 总是有神奇的 bug
+    var getBody = async () => {
+      let type = ctx.headers['content-type'];
+      if (type.indexOf('application/json') > -1)
+        ctx.req.body = await parse.json(ctx) || {};
+      else if (type.indexOf('application/x-www-from-urlencoded') > -1)
+        ctx.req.body = await parse.form(ctx) || {};
+      else ctx.req.body = await parse(ctx) || {};
+    };
+    if (ctx.method !== 'GET' && ctx.method !== 'OPTIONS') await getBody();
     await next();
     if (ctx.body) ctx.status = 200;
     else if (ctx.params) ctx.status = 204;
