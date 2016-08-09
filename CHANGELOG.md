@@ -1,3 +1,9 @@
+## 0.4.5
+
+`2016-09-02`
+
+* add support for save multiple documents.
+
 ## 0.4.4
 
 `2016-08-30`

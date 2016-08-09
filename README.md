@@ -135,15 +135,15 @@ support `params`, as above.
 
 ### Query
 
-list: request `/:projectName/:tablename` response `[{_id: ...}, ...]`。
+list: request `GET /:projectName/:tablename` response `[{_id: ...}, ...]`。
 
-count: request `/:projectName/:tablename/count` response `{count: ...}`。
+count: request `GET /:projectName/:tablename/count` response `{count: ...}`。
 
-aggregate: request `/:projectName/:tablename/aggregate` response `{_id: ...}`。
+aggregate: request `GET /:projectName/:tablename/aggregate` response `{_id: ...}`。
 
-detail: request `/:projectName/:tablename/detail` response `{_id: ...}`。
+detail: request `GET /:projectName/:tablename/detail` response `{_id: ...}`。
 
-auth: request `/:projectName/_auth response` response `{auth: ...}`.(0 for visitor, 1 for user, 2 for root, 3 for master)
+auth: request `GET /:projectName/_auth response` response `{auth: ...}`.(0 for visitor, 1 for user, 2 for root, 3 for master)
 
 ## Develop & Test
 
