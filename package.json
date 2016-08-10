@@ -1,6 +1,6 @@
 {
   "name": "clannad",
-  "version": "0.3.3",
+  "version": "0.3.5",
   "description": "data storage service with RESTful APIs.",
   "main": "app.js",
   "keywords": [

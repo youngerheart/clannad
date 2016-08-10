@@ -34,15 +34,21 @@ const Auth = {
   },
   async setCORS(ctx, isRoot) {
     // add cors
+    if (!ctx.headers.origin) return;
     var cors = isRoot || !ctx.params ? null : await getCORS(ctx.params.projectName);
     var origin = '';
     if (cors && cors.indexOf(ctx.headers.origin) !== -1 || !cors) origin = ctx.headers.origin;
-    ctx.set({
+    var headers = {
       'access-control-allow-credentials': true,
-      'access-control-allow-headers': 'X-Requested-With, Content-Type, X-Token',
-      'access-control-allow-methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
       'access-control-allow-origin': origin
-    });
+    };
+    // 需要对 OPTIONS 和其他方法做出不同处理
+    if (ctx.method === 'OPTIONS') {
+      headers['access-control-allow-methods'] = 'GET, POST, PUT, DELETE, PATCH, OPTIONS';
+      headers['access-control-allow-headers'] = 'X-Requested-With, Content-Type, X-Token';
+      headers['access-control-max-age'] = 1728000;
+    }
+    ctx.set(headers);
   },
   async fetchAuth(ctx, next) {
     await Auth.setCORS(ctx, true);

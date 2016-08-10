@@ -21,8 +21,8 @@ app.use(async (ctx, next) => {
     await parse.form(ctx) || await parse(ctx) || {};
   }
   if (ctx.method === 'OPTIONS') {
-    ctx.status = 200;
     Auth.setCORS(ctx, true);
+    ctx.status = 200;
   }
   ctx.type = 'json';
   try {
