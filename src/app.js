@@ -6,10 +6,10 @@ import Router from 'koa-router';
 import Routes from './routes';
 import Auth from './controllers/auth';
 import Table from './controllers/table';
+import RestError from './services/resterror';
 
 const app = new Koa();
-const userRouters = new Router({prefix: '/:projectName/:tableName/extra/:methodName'});
-userRouters.use('/', Auth.hasTableAuth, Table.getModel);
+const userRouters = new Router();
 
 mongoose.Promise = Promise;
 
@@ -32,6 +32,8 @@ app.use(async (ctx, next) => {
     };
     if (ctx.method !== 'GET' && ctx.method !== 'OPTIONS') await getBody();
     await next();
+    // 处理报错情况
+    if (ctx.status >= 400) throw new RestError(ctx.status, 'ROUTER_ERR', ctx.response.message);
     if (ctx.body) ctx.status = 200;
     else if (ctx.params) ctx.status = 204;
   } catch (err) {
