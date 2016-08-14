@@ -24,12 +24,14 @@ export default {
   async del(ctx) {
     var {model: Model} = ctx.req;
     var {id} = ctx.params;
-    await Model.removeById(id);
+    var {result} = await Model.removeById(id);
+    if (!result.n) throw new RestError(404, 'SOURCE_NOTFOUND_ERR', `source ${id} is not found`);
   },
   async edit(ctx) {
     var {model: Model, body: params} = ctx.req;
     var {id} = ctx.params;
-    await Model.updateById(id, parseNull(params));
+    var result = await Model.updateById(id, parseNull(params));
+    if (!result.n) throw new RestError(404, 'SOURCE_NOTFOUND_ERR', `source ${id} is not found`);
   },
   async list(ctx) {
     var {model: Model} = ctx.req;
