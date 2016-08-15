@@ -4,12 +4,12 @@
 
 data storage service with RESTful APIs.
 
+![clannad](http://ww1.sinaimg.cn/large/0060lm7Tgw1f5mjbjqhckj316e0fkafh.jpg)
+みんな　みんな　あわせで　ひゃくにんかぞく
+
 ## Intention & achieved
 
 You will get data you needed, without back-end develop, just APIs.
-
-![clannad](http://ww1.sinaimg.cn/large/0060lm7Tgw1f5mjbjqhckj316e0fkafh.jpg)
-みんな　みんな　あわせで　ひゃくにんかぞく 
 
 ## How it works
 
@@ -39,7 +39,8 @@ clannad.auth(async (ctx, authArr) => {
 }, 'REST'); // prefix for each authcode, default 'REST'
 
 // router interface
-// with prefix '/:projectName/:tableName/extra/:methodName'
+// These routers are occupied and shouldn't be rewritten.
+// /admin, /admin/**, /*/**
 clannad.router['get, post...']((ctx) => {
   // dealing mongoose model with ctx.req.model
 });
