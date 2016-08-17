@@ -1,3 +1,5 @@
+const parseJson = str => str ? JSON.parse(str) : str;
+
 const Tool = {
   dealSchema(schema) {
     schema.statics.findById = function(id, select) {
@@ -48,9 +50,10 @@ const Tool = {
     return query;
   },
   async getList({model, populate, query = {}, select = '', fields = []}) {
-    var {limit, offset, asc, populate: populateStr, sort, ...params} = query;
-    populate = populateStr ? populateStr.split(',') : populate;
-    var params = fields.length ? Tool.getQuery(params, fields) : params;
+    var {limit, offset, asc, populate: populateStr, sort, params: paramsStr} = query;
+    populate = parseJson(populateStr);
+    var params = parseJson(paramsStr) || {};
+    params = fields.length ? Tool.getQuery(params, fields) : params;
     return model.find(params, select)
       .populate(populate || '')
       .limit(parseInt(limit) || 30)

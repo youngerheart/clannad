@@ -19,7 +19,7 @@ app.use(async (ctx, next) => {
   try {
     if (ctx.method === 'OPTIONS') {
       await Auth.setCORS(ctx, true);
-      ctx.status = 200;
+      return ctx.status = 200;
     }
     // 直接解析出post参数, 这里的co-body 的 parse 总是有神奇的 bug
     var getBody = async () => {
@@ -31,13 +31,14 @@ app.use(async (ctx, next) => {
       else ctx.req.body = await parse(ctx) || {};
     };
     if (ctx.method !== 'GET' && ctx.method !== 'OPTIONS') await getBody();
+    let body = ctx.body;
     await next();
     if (ctx.body) ctx.status = 200;
     else if (ctx.params) ctx.status = 204;
     // 处理报错情况
-    else throw new RestError(ctx.status, 'ROUTER_ERR', ctx.response.message);
+    else throw new RestError(400, 'ROUTER_ERR', ctx.response.message);
   } catch (err) {
-    process.stderr.write(err + '\n');
+    process.stderr.write(err.stack + '\n');
     let {status, name, message, errors} = err;
     ctx.status = status || 500;
     if (name) ctx.body = {name, message, errors};

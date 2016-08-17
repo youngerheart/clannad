@@ -10,14 +10,6 @@ clannad.auth((ctx, authArr) => {
   return authArr.slice();
 });
 
-clannad.router.get('/', (ctx) => {
-  ctx.body = {
-    projectName: ctx.params.projectName,
-    tableName: ctx.params.tableName,
-    methodName: ctx.params.methodName
-  };
-});
-
 clannad.app.listen(3000, () => {
   process.stderr.write(`Server running at http://localhost:3000\n`);
 });
