@@ -53,8 +53,9 @@ export default {
   async detail(ctx) {
     var {model: Model} = ctx.req;
     var {id, projectName, tableName} = ctx.params;
-    var select = getSelectStr(`${projectName}.${tableName}`, ctx.req.auth, ctx.query.select);
-    var source = await Model.findById(id, select);
+    var {select, populate} = ctx.query;
+    var select = getSelectStr(`${projectName}.${tableName}`, ctx.req.auth, select);
+    var source = await Model.findById(id, select).populate(populate ? JSON.parse(populate) : '');
     if (!source) throw new RestError(404, 'SOURCE_NOTFOUND_ERR', `source ${id} is not found`);
     ctx.body = source;
   }

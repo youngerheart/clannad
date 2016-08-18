@@ -36,7 +36,7 @@ app.use(async (ctx, next) => {
     if (ctx.body) ctx.status = 200;
     else if (ctx.params) ctx.status = 204;
     // 处理报错情况
-    else throw new RestError(400, 'ROUTER_ERR', ctx.response.message);
+    else throw new RestError(ctx.status, 'ROUTER_ERR', ctx.response.message);
   } catch (err) {
     process.stderr.write(err.stack + '\n');
     let {status, name, message, errors} = err;

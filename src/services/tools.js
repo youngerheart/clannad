@@ -49,10 +49,11 @@ const Tool = {
     });
     return query;
   },
-  async getList({model, populate, query = {}, select = '', fields = []}) {
-    var {limit, offset, asc, populate: populateStr, sort, params: paramsStr} = query;
-    populate = parseJson(populateStr);
-    var params = parseJson(paramsStr) || {};
+  async getList({model, populate, query, select = '', fields = []}) {
+    var {limit, offset, asc, populate: populateStr, sort, params: paramsStr, ...params} = query;
+    populate = parseJson(populateStr) || populate;
+    // 处理从系统内部与外界传来的参数
+    params = {...parseJson(paramsStr) || {}, ...params};
     params = fields.length ? Tool.getQuery(params, fields) : params;
     return model.find(params, select)
       .populate(populate || '')
