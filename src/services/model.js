@@ -19,19 +19,22 @@ var cors = {};
 // 储存所有项目的token数组
 var globalTokens = {};
 
-const getField = (data) => {
+const getField = (data, projectName) => {
   data = JSON.parse(JSON.stringify(data));
   let field = {};
   // 处理类型, 默认值
   switch (data.type) {
-    case 'ObjectId':
     case 'Mixed':
-      field.type = Schema.Types[data.type];
-      if (data.default) field.default = Types[data.type](data.default);
+      field.type = Schema.Types.Mixed;
+      if (data.default) field.default = Types.Mixed(data.default);
+      break;
+    case 'ObjectId':
+      field.type = Schema.Types.ObjectId;
+      if (data.default && data.default.length === 24) field.default = Types.ObjectId(data.default);
       break;
     case 'ObjectIdArray':
       field.type = Schema.Types.ObjectId;
-      if (data.default) {
+      if (data.default && data.default.length === 24) {
         if (typeof data.default === 'string') data.default = JSON.parse(data.default);
         field.default = data.default.map((item) => Types.ObjectId(item));
       }
@@ -52,7 +55,7 @@ const getField = (data) => {
   // 处理正则
   if (data.validExp) field.validate = new RegExp(data.validExp);
   // 处理ref
-  if (data.ref) field.ref = data.ref;
+  if (data.ref) field.ref = `${projectName}.${data.ref}`;
   let others = getQuery(data, ['required', 'unique', 'index']);
   if (data.type === 'ObjectIdArray') return [{...field, ...others}];
   return {...field, ...others};
@@ -78,7 +81,7 @@ const Model = {
       // 重做显示权限
       let show = {};
       table.fields.forEach((field) => {
-        fields[field.name] = getField(field);
+        fields[field.name] = getField(field, projectName);
         show[field.name] = JSON.parse(JSON.stringify(field.show));
       });
       let name = `${project.name}.${table.name}`;

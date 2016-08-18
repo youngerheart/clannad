@@ -108,9 +108,11 @@ about all table field's detail, view [DB docs](https://github.com/youngerheart/c
 
 `select` a JSON about you want to select, such as `["field1","field2",...]`
 
-`params` a JSON about criterial, such as `{"field1":{"$gte":21},"field2":"duang",...}`
-
 *disabled while query by id*
+
+`params` is data about criterial:
+* a JSON, such as `{"field1":{"$gte":21},"field2":"duang",...}`
+* or you can use queryString, such as `field1=xxx&field2=xxx&...`
 
 `limit` default 30
 
