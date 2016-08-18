@@ -98,6 +98,9 @@ router.get('/:projectName/:tableName', Source.list);
 // 获得资源总和
 router.get('/:projectName/:tableName/count', Source.count);
 
+// 获取聚合数据
+router.get('/:projectName/:tableName/aggregate', Source.aggregate);
+
 // 获得单条资源
 router.get('/:projectName/:tableName/:id', Source.detail);
 

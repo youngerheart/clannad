@@ -1,5 +1,5 @@
 import RestError from '../services/resterror';
-import {getList, parseNull} from '../services/tools';
+import {getList, parseNull, getAggregate} from '../services/tools';
 import {getShows} from '../services/model';
 
 const getSelectStr = (name, auth, selectArr) => {
@@ -37,12 +37,13 @@ export default {
   },
   async list(ctx) {
     var {model: Model} = ctx.req;
+    var {select, ...query} = ctx.query;
     var {projectName, tableName} = ctx.params;
-    var select = getSelectStr(`${projectName}.${tableName}`, ctx.req.auth, ctx.query.select);
+    select = getSelectStr(`${projectName}.${tableName}`, ctx.req.auth, select);
     ctx.body = await getList({
       model: Model,
       select,
-      query: ctx.query
+      query
     });
   },
   async count(ctx) {
@@ -58,5 +59,18 @@ export default {
     var source = await Model.findById(id, select).populate(populate ? JSON.parse(populate) : '');
     if (!source) throw new RestError(404, 'SOURCE_NOTFOUND_ERR', `source ${id} is not found`);
     ctx.body = source;
+  },
+  async aggregate(ctx) {
+    var {model: Model} = ctx.req;
+    var {group, sort, ...query} = ctx.query;
+    var {projectName, tableName} = ctx.params;
+    var select = getSelectStr(`${projectName}.${tableName}`, ctx.req.auth, select);
+    ctx.body = await getAggregate({
+      model: Model,
+      select,
+      group,
+      sort,
+      query
+    });
   }
 };
