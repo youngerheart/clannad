@@ -104,7 +104,11 @@ about all table field's detail, view [DB docs](https://github.com/youngerheart/c
 
 ### General query params
 
-`populate` a stringArray about which field you want to populate, such as `field1,field2...`
+`populate` a JSON about you want to populate, such as `{"path": "field1","select": "name",populete:{"path":...}}`
+
+`select` a JSON about you want to select, such as `["field1","field2",...]`
+
+`params` a JSON about criterial, such as `{"field1":{"$gte":21},"field2":"duang",...}`
 
 *disabled while query by id*
 

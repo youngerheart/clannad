@@ -2,13 +2,15 @@ import RestError from '../services/resterror';
 import {getList, parseNull} from '../services/tools';
 import {getShows} from '../services/model';
 
-const getSelectStr = (name, auth) => {
+const getSelectStr = (name, auth, selectArr) => {
+  if (selectArr) selectArr = JSON.parse(selectArr);
   var select = [];
   var shows = getShows(name);
   if (!auth) throw new RestError(404, 'AUTH_NOTFOUND_ERR', 'auth is not found');
   if (!shows) throw new RestError(404, 'SHOWS_NOTFOUND_ERR', `shows ${shows} is not found`);
   for (let name in shows) {
-    if (!shows[name][auth]) select.push(`-${name}`);
+    if (selectArr && selectArr.indexOf(name) === -1) select.push(`-${name}`);
+    else if (!shows[name][auth]) select.push(`-${name}`);
   }
   select = select.join(' ');
   return select + ' -__v';
@@ -36,7 +38,7 @@ export default {
   async list(ctx) {
     var {model: Model} = ctx.req;
     var {projectName, tableName} = ctx.params;
-    var select = getSelectStr(`${projectName}.${tableName}`, ctx.req.auth);
+    var select = getSelectStr(`${projectName}.${tableName}`, ctx.req.auth, ctx.query.select);
     ctx.body = await getList({
       model: Model,
       select,
@@ -51,7 +53,7 @@ export default {
   async detail(ctx) {
     var {model: Model} = ctx.req;
     var {id, projectName, tableName} = ctx.params;
-    var select = getSelectStr(`${projectName}.${tableName}`, ctx.req.auth);
+    var select = getSelectStr(`${projectName}.${tableName}`, ctx.req.auth, ctx.query.select);
     var source = await Model.findById(id, select);
     if (!source) throw new RestError(404, 'SOURCE_NOTFOUND_ERR', `source ${id} is not found`);
     ctx.body = source;
