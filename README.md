@@ -75,13 +75,6 @@ and table's field (admin.fields)
 
 **token** while a request header own field 'X-Token', and it's value exist in that admin.project.tokens, that request will be regarded as a user's request.
 
-## Develop & Test
-
-```
-$ make dev
-$ cd test && make source
-```
-
 ## API
 
 about all API's route, view [routes.js](https://github.com/youngerheart/clannad/blob/master/src/routes.js)。
@@ -104,6 +97,8 @@ about all table field's detail, view [DB docs](https://github.com/youngerheart/c
 
 ### General query params
 
+#### For list or detail interface
+
 `populate` a JSON about you want to populate, such as `{"path": "field1","select": "name",populete:{"path":...}}`
 
 `select` a JSON about you want to select, such as `["field1","field2",...]`
@@ -122,6 +117,14 @@ about all table field's detail, view [DB docs](https://github.com/youngerheart/c
 
 `asc` default sort is `-${sort}`, use `asc=1` to make sort be `${sort}`
 
+#### For aggregate interface
+
+support `params`, as above.
+
+`group` a JSON about `$group` operator to this aggregate pipeline, such as `{"_id":"$field1","num":{"$sum":1}}`
+
+`sort` a JSON about sorts all input documents, such as `{"field1": -1, "field2": 1}`
+
 ### General result field
 
 `_id`
@@ -136,4 +139,13 @@ list: request `/:projectName/:tablename` response `[{_id: ...}, ...]`。
 
 count: request `/:projectName/:tablename/count` response `{count: ...}`。
 
+aggregate: request `/:projectName/:tablename/aggregate` response `{_id: ...}`。
+
 detail: request `/:projectName/:tablename/:id` response `{_id: ...}`。
+
+## Develop & Test
+
+```
+$ make dev
+$ cd test && make source
+```

@@ -1,3 +1,6 @@
+import {Types} from 'mongoose';
+import RestError from './resterror';
+
 const parseJson = str => str ? JSON.parse(str) : str;
 
 const Tool = {
@@ -49,17 +52,28 @@ const Tool = {
     });
     return query;
   },
-  async getList({model, populate, query, select = '', fields = []}) {
+  getList({model, query, select = ''}) {
     var {limit, offset, asc, populate: populateStr, sort, params: paramsStr, ...params} = query;
-    populate = parseJson(populateStr) || populate;
+    var populate = parseJson(populateStr);
     // 处理从系统内部与外界传来的参数
     params = {...parseJson(paramsStr) || {}, ...params};
-    params = fields.length ? Tool.getQuery(params, fields) : params;
     return model.find(params, select)
       .populate(populate || '')
       .limit(parseInt(limit) || 30)
       .skip(parseInt(offset) || 0)
       .sort(`${asc ? '' : '-'}${sort || 'createdAt'}`);
+  },
+  getAggregate({model, query, group: groupStr, sort: sortStr, select = ''}) {
+    var {params: paramsStr, ...params} = query;
+    var $match = {...parseJson(paramsStr) || {}, ...params};
+    if ($match._id) $match._id = Types.ObjectId($match._id);
+    var $group = JSON.parse(groupStr);
+    select.trim().split(' ').forEach((item) => {
+      if ($group._id && $group._id.indexOf(item.replace('-', '')) !== -1) {
+        throw new RestError(403, 'AUTH_ERR', 'no permission for aggregate group');
+      }
+    });
+    return model.aggregate([{$group}, {$match}, {$sort: sortStr ? JSON.parse(sortStr) : {_id: 1}}]);
   },
   parseArr(str) {
     return str.split('\'').filter(item => item.length > 3);
