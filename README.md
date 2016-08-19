@@ -143,6 +143,8 @@ aggregate: request `/:projectName/:tablename/aggregate` response `{_id: ...}`。
 
 detail: request `/:projectName/:tablename/:id` response `{_id: ...}`。
 
+auth: request `/:projectName/_auth response ` response `{auth: ...}`.(0 for visitor, 1 for user, 2 for root, 3 for master)
+
 ## Develop & Test
 
 ```

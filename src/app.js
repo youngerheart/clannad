@@ -31,7 +31,6 @@ app.use(async (ctx, next) => {
       else ctx.req.body = await parse(ctx) || {};
     };
     if (ctx.method !== 'GET' && ctx.method !== 'OPTIONS') await getBody();
-    let body = ctx.body;
     await next();
     if (ctx.body) ctx.status = 200;
     else if (ctx.params) ctx.status = 204;

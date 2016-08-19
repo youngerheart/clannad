@@ -81,6 +81,10 @@ router.patch('/admin/:projectName/field/:id', Field.edit);
 router.get('/admin/:projectName/field/:id', Field.detail);
 
 // 用户接口
+
+// 查看该用户对该项目的权限
+router.get('/:projectName/_auth', Auth.getProjectAuth)
+
 router.use('/:projectName/:tableName', Auth.hasTableAuth, Table.getModel);
 
 // 新增一个资源，需要 source本体。

@@ -1,3 +1,9 @@
+## 0.4.1
+
+`2016-08-26`
+
+* add interface for view user's auth.
+
 ## 0.4.0
 
 `2016-08-18`
