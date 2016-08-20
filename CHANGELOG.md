@@ -1,8 +1,9 @@
-## 0.4.1
+## 0.4.2
 
-`2016-08-26`
+`2016-08-29`
 
 * add interface for view user's auth.
+* fix admin.fields ref's bug.
 
 ## 0.4.0
 
