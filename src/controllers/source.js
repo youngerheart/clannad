@@ -18,22 +18,21 @@ const getSelectStr = (name, auth, selectArr) => {
 
 export default {
   async add(ctx) {
-    var {model: Model, body: params} = ctx.req;
-    var model = new Model(parseNull(params));
+    var {model: Model, body: data} = ctx.req;
+    var model = new Model(parseNull(data));
     await model.save();
     ctx.body = {id: model._id};
   },
   async del(ctx) {
-    var {model: Model} = ctx.req;
-    var {id} = ctx.params;
-    var {result} = await Model.removeById(id);
-    if (!result.n) throw new RestError(404, 'SOURCE_NOTFOUND_ERR', `source ${id} is not found`);
+    var {params, model: Model} = ctx.req;
+    var {result} = await Model.remove(params ? JSON.parse(params) : {});
+    if (!result.n) throw new RestError(404, 'SOURCE_NOTFOUND_ERR', 'source is not found');
   },
   async edit(ctx) {
-    var {model: Model, body: params} = ctx.req;
-    var {id} = ctx.params;
-    var result = await Model.updateById(id, parseNull(params));
-    if (!result.n) throw new RestError(404, 'SOURCE_NOTFOUND_ERR', `source ${id} is not found`);
+    var {model: Model, body: data} = ctx.req;
+    var {params} = ctx.query;
+    var result = await Model.update(params ? JSON.parse(params) : {}, parseNull(data));
+    if (!result.n) throw new RestError(404, 'SOURCE_NOTFOUND_ERR', 'source is not found');
   },
   async list(ctx) {
     var {model: Model} = ctx.req;
@@ -53,11 +52,11 @@ export default {
   },
   async detail(ctx) {
     var {model: Model} = ctx.req;
-    var {id, projectName, tableName} = ctx.params;
-    var {select, populate} = ctx.query;
+    var {projectName, tableName} = ctx.params;
+    var {params, select, populate} = ctx.query;
     var select = getSelectStr(`${projectName}.${tableName}`, ctx.req.auth, select);
-    var source = await Model.findById(id, select).populate(populate ? JSON.parse(populate) : '');
-    if (!source) throw new RestError(404, 'SOURCE_NOTFOUND_ERR', `source ${id} is not found`);
+    var source = await Model.findOne(params ? JSON.parse(params) : {}, select).populate(populate ? JSON.parse(populate) : '');
+    if (!source) throw new RestError(404, 'SOURCE_NOTFOUND_ERR', 'source is not found');
     ctx.body = source;
   },
   async aggregate(ctx) {

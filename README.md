@@ -103,11 +103,11 @@ about all table field's detail, view [DB docs](https://github.com/youngerheart/c
 
 `select` a JSON about you want to select, such as `["field1","field2",...]`
 
-*disabled while query by id*
-
 `params` is data about criterial:
 * a JSON, such as `{"field1":{"$gte":21},"field2":"duang",...}`
 * or you can use queryString, such as `field1=xxx&field2=xxx&...`
+
+*disabled while query by id*
 
 `limit` default 30
 
@@ -141,9 +141,9 @@ count: request `/:projectName/:tablename/count` response `{count: ...}`。
 
 aggregate: request `/:projectName/:tablename/aggregate` response `{_id: ...}`。
 
-detail: request `/:projectName/:tablename/:id` response `{_id: ...}`。
+detail: request `/:projectName/:tablename/detail` response `{_id: ...}`。
 
-auth: request `/:projectName/_auth response ` response `{auth: ...}`.(0 for visitor, 1 for user, 2 for root, 3 for master)
+auth: request `/:projectName/_auth response` response `{auth: ...}`.(0 for visitor, 1 for user, 2 for root, 3 for master)
 
 ## Develop & Test
 

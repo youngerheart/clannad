@@ -1,9 +1,13 @@
-## 0.4.2
+## 0.4.4
 
-`2016-08-29`
+`2016-08-30`
 
 * add interface for view user's auth.
 * fix admin.fields ref's bug.
+
+**update**
+
+* change typeof selector of `update` and `detail` APIs to JSON.
 
 ## 0.4.0
 
