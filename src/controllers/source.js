@@ -20,7 +20,7 @@ export default {
   async add(ctx) {
     var {model: Model, body: data} = ctx.req;
     if (Array.isArray(data)) {
-      data = data.map(item => parseNull(data));
+      data = data.map(item => parseNull(item));
       var models = await Model.insertMany(data);
       ctx.body = models.map(model => ({id: model._id}));
     } else {
@@ -30,7 +30,8 @@ export default {
     }
   },
   async del(ctx) {
-    var {params, model: Model} = ctx.req;
+    var {model: Model} = ctx.req;
+    var {params} = ctx.query;
     var {result} = await Model.remove(params ? JSON.parse(params) : {});
     if (!result.n) throw new RestError(404, 'SOURCE_NOTFOUND_ERR', 'source is not found');
   },
