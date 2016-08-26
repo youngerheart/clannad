@@ -85,6 +85,21 @@ const Auth = {
       if (auth.visitorAuth[ctx.method.toLowerCase()]) return next();
     }
     throw authErr;
+  },
+  async getProjectAuth(ctx) {
+    await Auth.setCORS(ctx);
+    var auth = 0;
+    var {projectName} = ctx.params;
+    if (await dealCheck(ctx, [`${Auth.name}.${projectName.toUpperCase()}.MASTER`], true)) {
+      auth = 3;
+    } else if ((await dealCheck(ctx, [`${Auth.name}.${projectName.toUpperCase()}.ROOT`], true) ||
+      await dealCheck(ctx, [`${Auth.name}.${projectName.toUpperCase()}.ADMIN`], true))) {
+      auth = 2;
+    } else if (await dealCheck(ctx, [`${Auth.name}.${projectName.toUpperCase()}.USER`], true) ||
+      await hasToken(ctx.headers['x-token'], projectName)) {
+      auth = 1;
+    }
+    ctx.body = {auth};
   }
 };
 
