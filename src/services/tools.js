@@ -3,6 +3,29 @@ import RestError from './resterror';
 
 const parseJson = str => str ? JSON.parse(str) : str;
 
+const parseObjectId = (obj) => {
+  switch (typeof obj) {
+    case 'string':
+      try {return Types.ObjectId(obj);} catch (err) {};
+      break;
+    case 'object':
+      if (Array.isArray(obj)) {
+        for (let index = 0; index < obj.length; index++) {
+          obj[index] = parseObjectId(obj[index]);
+        }
+        return obj;
+      } else {
+        for (let key in obj) {
+          obj[key] = parseObjectId(obj[key]);
+        }
+        return obj;
+      }
+      break;
+    default:
+      return obj;
+  }
+};
+
 const Tool = {
   dealSchema(schema) {
     schema.statics.findById = function(id, select) {
@@ -66,14 +89,15 @@ const Tool = {
   getAggregate({model, query, group: groupStr, sort: sortStr, select = ''}) {
     var {params: paramsStr, ...params} = query;
     var $match = {...parseJson(paramsStr) || {}, ...params};
-    if ($match._id) $match._id = Types.ObjectId($match._id);
+    parseObjectId($match);
     var $group = JSON.parse(groupStr);
     select.trim().split(' ').forEach((item) => {
       if ($group._id && $group._id.indexOf(item.replace('-', '')) !== -1) {
         throw new RestError(403, 'AUTH_ERR', 'no permission for aggregate group');
       }
     });
-    return model.aggregate([{$group}, {$match}, {$sort: sortStr ? JSON.parse(sortStr) : {_id: 1}}]);
+    var exp = [{$match}, {$sort: sortStr ? JSON.parse(sortStr) : {_id: 1}}, {$group}];
+    return model.aggregate(exp);
   },
   parseArr(str) {
     return str.split('\'').filter(item => item.length > 3);
