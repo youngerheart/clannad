@@ -20,7 +20,6 @@ const parseObjectId = (obj) => {
         }
         return obj;
       }
-      break;
     default:
       return obj;
   }
