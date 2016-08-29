@@ -80,7 +80,13 @@ const Tool = {
   },
   parseNull(params) {
     for (let key in params) {
-      if (params[key] === '') params[key] = null;
+      var param = params[key];
+      if (param === '') params[key] = null;
+      try {
+        params[key] = JSON.parse(param);
+      } catch (err) {
+        params[key] = param;
+      }
     }
     return params;
   }
