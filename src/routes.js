@@ -90,11 +90,11 @@ router.use('/:projectName/:tableName', Auth.hasTableAuth, Table.getModel);
 // 新增一个资源，需要 source本体。
 router.post('/:projectName/:tableName', Source.add);
 
-// 删除一个资源
-router.del('/:projectName/:tableName/:id', Source.del);
+// 删除资源
+router.del('/:projectName/:tableName', Source.del);
 
-// 修改一个资源
-router.patch('/:projectName/:tableName/:id', Source.edit);
+// 修改资源
+router.patch('/:projectName/:tableName', Source.edit);
 
 // 获得资源列表
 router.get('/:projectName/:tableName', Source.list);
@@ -106,6 +106,6 @@ router.get('/:projectName/:tableName/count', Source.count);
 router.get('/:projectName/:tableName/aggregate', Source.aggregate);
 
 // 获得单条资源
-router.get('/:projectName/:tableName/:id', Source.detail);
+router.get('/:projectName/:tableName/detail', Source.detail);
 
 export default router;
