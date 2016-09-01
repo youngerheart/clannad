@@ -1,6 +1,6 @@
 {
   "name": "clannad",
-  "version": "0.4.13",
+  "version": "0.4.15",
   "description": "data storage service with RESTful APIs.",
   "main": "app.js",
   "keywords": [
@@ -16,6 +16,7 @@
   },
   "homepage": "https://github.com/youngerheart/clannad",
   "dependencies": {
+    "async-busboy": "^0.1.1",
     "co-body": "^4.2.0",
     "koa": "^2.0.0",
     "koa-router": "^7.0.1",

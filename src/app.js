@@ -1,6 +1,7 @@
 import Koa from 'koa';
 import mongoose from 'mongoose';
 import parse from 'co-body';
+import parseFile from 'async-busboy';
 import Router from 'koa-router';
 
 import Routes from './routes';
@@ -30,7 +31,11 @@ app.use(async (ctx, next) => {
         ctx.req.body = await parse.form(ctx) || {};
       else ctx.req.body = await parse(ctx) || {};
     };
-    if (ctx.method !== 'GET' && ctx.method !== 'OPTIONS') await getBody();
+    if (ctx.request.is('multipart/*')) {
+      var {files, fields} = await parseFile(ctx.req, {autoFields: true});
+      ctx.req.body = fields;
+      ctx.req.files = files;
+    } else if (ctx.method !== 'GET' && ctx.method !== 'OPTIONS') await getBody();
     await next();
     if (ctx.body) ctx.status = 200;
     else if (ctx.params) ctx.status = 204;
