@@ -20,6 +20,7 @@ export default {
   async add(ctx) {
     var {model: Model, body: data} = ctx.req;
     if (Array.isArray(data)) {
+      if (!data.length) throw new RestError(400, 'SOURCE_EMPTY_ERR', 'source array is empty');
       data = data.map(item => parseNull(item));
       var models = await Model.insertMany(data);
       ctx.body = models.map(model => ({id: model._id}));
