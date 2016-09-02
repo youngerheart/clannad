@@ -19,9 +19,15 @@ const getSelectStr = (name, auth, selectArr) => {
 export default {
   async add(ctx) {
     var {model: Model, body: data} = ctx.req;
-    var model = new Model(parseNull(data));
-    await model.save();
-    ctx.body = {id: model._id};
+    if (Array.isArray(data)) {
+      data = data.map(item => parseNull(data));
+      var models = await Model.insertMany(data);
+      ctx.body = models.map(model => ({id: models._id}));
+    } else {
+      var model = new Model(parseNull(data));
+      await model.save();
+      ctx.body = {id: model._id};
+    }
   },
   async del(ctx) {
     var {params, model: Model} = ctx.req;
