@@ -22,7 +22,7 @@ export default {
     if (Array.isArray(data)) {
       data = data.map(item => parseNull(data));
       var models = await Model.insertMany(data);
-      ctx.body = models.map(model => ({id: models._id}));
+      ctx.body = models.map(model => ({id: model._id}));
     } else {
       var model = new Model(parseNull(data));
       await model.save();
