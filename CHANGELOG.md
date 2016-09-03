@@ -1,8 +1,9 @@
-## 0.4.9
+## 0.4.10
 
-`2016-09-02`
+`2016-09-03`
 
 * add support for save multiple documents.
+* fix bugs in aggregate.
 
 ## 0.4.4
 
