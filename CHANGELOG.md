@@ -1,9 +1,10 @@
-## 0.4.10
+## 0.4.12
 
 `2016-09-03`
 
 * add support for save multiple documents.
 * fix bugs in aggregate.
+* support edit muti docs
 
 ## 0.4.4
 
