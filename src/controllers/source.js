@@ -33,13 +33,13 @@ export default {
   async del(ctx) {
     var {model: Model} = ctx.req;
     var {params} = ctx.query;
-    var {result} = await Model.remove(params ? JSON.parse(params) : {});
+    await Model.remove(params ? JSON.parse(params) : {});
     // if (!result.n) throw new RestError(404, 'SOURCE_NOTFOUND_ERR', 'source is not found');
   },
   async edit(ctx) {
     var {model: Model, body: data} = ctx.req;
     var {params} = ctx.query;
-    var result = await Model.update(params ? JSON.parse(params) : {}, parseNull(data), {muti: true});
+    await Model.update(params ? JSON.parse(params) : {}, parseNull(data), {muti: true});
     // if (!result.n) throw new RestError(404, 'SOURCE_NOTFOUND_ERR', 'source is not found');
   },
   async list(ctx) {

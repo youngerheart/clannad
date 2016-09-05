@@ -43,6 +43,7 @@ clannad.auth(async (ctx, authArr) => {
 // /admin, /admin/**, /*/**
 clannad.router['get, post...']((ctx) => {
   // dealing mongoose model with ctx.req.model
+  // support multipart/* after version 0.4.15
 });
 
 clannad.app.use(...) // clannad's koa app

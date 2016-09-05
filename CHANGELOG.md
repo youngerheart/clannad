@@ -1,10 +1,14 @@
-## 0.4.13
+## 0.4.15
+
+* add support for DIT routers with `multipart/*` content-type.
+
+## 0.4.14
 
 `2016-09-03`
 
 * add support for save multiple documents.
 * fix bugs in aggregate.
-* support edit muti docs
+* support edit muti docs.
 
 ## 0.4.4
 
