@@ -1,8 +1,9 @@
 ## 0.4.15
 
-* add support for DIT routers with `multipart/*` content-type.
+* add support for DIY routers with `multipart/*` content-type.
+* remove throw while docs not found
 
-## 0.4.14
+## 0.4.13
 
 `2016-09-03`
 
