@@ -64,7 +64,7 @@ export default {
     var {params, select, populate} = ctx.query;
     var select = getSelectStr(`${projectName}.${tableName}`, ctx.req.auth, select);
     var source = await Model.findOne(params ? JSON.parse(params) : {}, select).populate(populate ? JSON.parse(populate) : '');
-    if (!source) throw new RestError(404, 'SOURCE_NOTFOUND_ERR', 'source is not found');
+    // if (!source) throw new RestError(404, 'SOURCE_NOTFOUND_ERR', 'source is not found');
     ctx.body = source;
   },
   async aggregate(ctx) {
