@@ -1,7 +1,8 @@
-## 0.4.15
+## 0.4.16
 
 * add support for DIY routers with `multipart/*` content-type.
-* remove throw while docs not found
+* remove throw while docs not found.
+* update support for field unique.
 
 ## 0.4.13
 

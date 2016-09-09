@@ -1,5 +1,6 @@
 import {Types} from 'mongoose';
 import RestError from './resterror';
+import uniqueValidator from 'mongoose-unique-validator';
 
 const parseJson = str => str ? JSON.parse(str) : str;
 
@@ -27,6 +28,7 @@ const parseObjectId = (obj) => {
 
 const Tool = {
   dealSchema(schema) {
+    schema.plugin(uniqueValidator);
     schema.statics.findById = function(id, select) {
       return this.findOne({_id: id}, select);
     };
