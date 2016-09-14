@@ -1,7 +1,7 @@
 import Table from '../models/table';
 import Field from '../models/field';
 import RestError from '../services/resterror';
-import {removeCaches} from '../services/model';
+import {getCaches, removeCaches} from '../services/model';
 import {getQuery, getList, parseNull} from '../services/tools';
 
 const select = '-__v -table';
@@ -38,13 +38,16 @@ export default {
     await field.remove();
   },
   async edit(ctx) {
-    var {id} = ctx.params;
+    var {projectName, id} = ctx.params;
     var query = parseNull(getFieldQuery(ctx.req.body));
     var field = await Field.findById(id);
     var table = await Table.findById(field.table);
     if (!table) throw new RestError(404, 'TABLE_NOTFOUND_ERR', `table ${field.table} is not found`);
     for (let key in query) {field[key] = query[key];}
     await field.save();
+    // 删除原有的索引
+    var cache = (await getCaches(projectName))[`${projectName}.${table.name}`];
+    await cache.collection.dropAllIndexes();
   },
   async list(ctx) {
     var {id: table} = ctx.params;
