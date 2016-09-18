@@ -39,7 +39,7 @@ export default {
   async edit(ctx) {
     var {model: Model, body: data} = ctx.req;
     var {params} = ctx.query;
-    await Model.update(params ? JSON.parse(params) : {}, parseNull(data), {muti: true});
+    await Model.update(params ? JSON.parse(params) : {}, parseNull(data), {multi: true});
     // if (!result.n) throw new RestError(404, 'SOURCE_NOTFOUND_ERR', 'source is not found');
   },
   async list(ctx) {
