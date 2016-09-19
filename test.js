@@ -5,6 +5,12 @@ clannad.configDB((mongoose) => {
   mongoose.connect('mongodb://127.0.0.1:27017/clannad');
 });
 
+clannad.configIO({
+  db: 'clannad',
+  host: '127.0.0.1',
+  port: 27017
+});
+
 clannad.auth((ctx, authArr) => {
   process.stderr.write(`need auth: ${authArr}\n`);
   return authArr.slice();

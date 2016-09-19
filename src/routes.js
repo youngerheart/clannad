@@ -6,6 +6,7 @@ import Token from './controllers/token';
 import Table from './controllers/table';
 import Source from './controllers/source';
 import Field from './controllers/field';
+import File from './controllers/file';
 
 const router = new Router();
 
@@ -37,6 +38,12 @@ router.del('/admin/:projectName/token/:name', Token.del);
 
 // 查看 token 数组
 router.get('/admin/:projectName/token', Token.list);
+
+// 导出数据
+router.get('/admin/:projectName/_export', File.export);
+
+// 导入数据
+router.post('/admin/:projectName/_import', File.import);
 
 // 查询用户有权限的项目列表
 router.get('/admin', Auth.fetchAuth);
