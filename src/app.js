@@ -8,6 +8,7 @@ import Routes from './routes';
 import Auth from './controllers/auth';
 import Table from './controllers/table';
 import RestError from './services/resterror';
+import File from './controllers/file';
 
 const app = new Koa();
 const userRouters = new Router();
@@ -62,6 +63,9 @@ export default {
   },
   configDB(callback) {
     callback(mongoose);
+  },
+  configIO(config) {
+    File.config = config;
   },
   router: userRouters
 };

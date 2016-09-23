@@ -38,6 +38,19 @@ clannad.auth(async (ctx, authArr) => {
   return await check(ctx, authArr);
 }, 'REST'); // prefix for each authcode, default 'REST'
 
+// config for export/import DB format/source
+// fields and default value
+clannad.configIO({
+  db: 'clannad',
+  host: '127.0.0.1',
+  port: 27017,
+  user: '',
+  password: '',
+  out: '', // export filename
+  drop: false, // Before restoring the collections from the dumped backup, drops the collections from the target database.
+  noSource: false // set true to disable export source.
+});
+
 // router interface
 // These routers are occupied and shouldn't be rewritten.
 // /admin, /admin/**, /*/**
@@ -136,15 +149,21 @@ support `params`, as above.
 
 ### Query
 
-list: request `GET /:projectName/:tablename` response `[{_id: ...}, ...]`。
+list: request `(GET) /:projectName/:tablename` response `[{_id: ...}, ...]`。
 
-count: request `GET /:projectName/:tablename/count` response `{count: ...}`。
+count: request `(GET) /:projectName/:tablename/count` response `{count: ...}`。
 
-aggregate: request `GET /:projectName/:tablename/aggregate` response `{_id: ...}`。
+aggregate: request `(GET) /:projectName/:tablename/aggregate` response `{_id: ...}`。
 
-detail: request `GET /:projectName/:tablename/detail` response `{_id: ...}`。
+detail: request `(GET) /:projectName/:tablename/detail` response `{_id: ...}`。
 
-auth: request `GET /:projectName/_auth response` response `{auth: ...}`.(0 for visitor, 1 for user, 2 for root, 3 for master)
+auth: request `(GET) /:projectName/_auth response` response `{auth: ...}`.(0 for visitor, 1 for user, 2 for root, 3 for master)
+
+### export/import DB format/source
+
+`(GET) admin/:tableName/_export` then you'll get a export `_export.tar.gz` file.
+
+`(POST) admin/:tableName/_import` with `form-data` and any fieldName with your `_export.tar.gz` file, and data will be imported after that.
 
 ## Develop & Test
 
