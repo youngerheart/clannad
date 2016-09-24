@@ -1,4 +1,4 @@
-## 0.5.0
+## 0.5.1
 
 * add support for import/export DB format/source.
 

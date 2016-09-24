@@ -9,6 +9,7 @@ const File = {
   async export(ctx) {
     var config = File.config || {};
     var {projectName} = ctx.params;
+    var {needSource} = ctx.query;
     var project = await Project.findOne({name: projectName});
     if (!project) throw new RestError(404, 'PROJECT_NOTFOUND_ERR', `project ${projectName} is not found`);
     var tables = await Table.find({project: project._id});
@@ -31,7 +32,7 @@ const File = {
         query: {table: {$in: tableIds}}
       }]
     };
-    if (!config.noSource) {
+    if (needSource) {
       tables.forEach((table) => {
         db.collections.push(`${projectName}.${table.name}s`);
       });
@@ -44,7 +45,11 @@ const File = {
     var {path} = ctx.req.files[0];
     // 路径，从文件中获取
     var config = File.config || {};
-    await DBIO.import(path, config);
+    try {
+      await DBIO.import(path, config);
+    } catch (err) {
+      throw new RestError(500, 'FILE_IMPORT_ERR', err.message);
+    }
   }
 };
 
