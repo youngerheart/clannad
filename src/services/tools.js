@@ -97,7 +97,7 @@ const Tool = {
         throw new RestError(403, 'AUTH_ERR', 'no permission for aggregate group');
       }
     });
-    var exp = [{$match}, {$sort: sortStr ? JSON.parse(sortStr) : {_id: 1}}, {$group}];
+    var exp = [{$match}, {$group}, {$sort: sortStr ? JSON.parse(sortStr) : {_id: 1}}];
     return model.aggregate(exp);
   },
   parseArr(str) {

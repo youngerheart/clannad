@@ -47,8 +47,7 @@ clannad.configIO({
   user: '',
   password: '',
   out: '', // export filename
-  drop: false, // Before restoring the collections from the dumped backup, drops the collections from the target database.
-  noSource: false // set true to disable export source.
+  drop: false // Before restoring the collections from the dumped backup, drops the collections from the target database.
 });
 
 // router interface
@@ -161,7 +160,9 @@ auth: request `(GET) /:projectName/_auth response` response `{auth: ...}`.(0 for
 
 ### export/import DB format/source
 
-`(GET) admin/:tableName/_export` then you'll get a export `_export.tar.gz` file.
+`(GET) admin/:tableName/_export/:fileName` then you'll get a export `${fileName}.tar.gz` file.
+
+param `needSource` decided export all source or only format.
 
 `(POST) admin/:tableName/_import` with `form-data` and any fieldName with your `_export.tar.gz` file, and data will be imported after that.
 

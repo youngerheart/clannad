@@ -40,7 +40,7 @@ router.del('/admin/:projectName/token/:name', Token.del);
 router.get('/admin/:projectName/token', Token.list);
 
 // 导出数据
-router.get('/admin/:projectName/_export', File.export);
+router.get('/admin/:projectName/_export/:fileName', File.export);
 
 // 导入数据
 router.post('/admin/:projectName/_import', File.import);
