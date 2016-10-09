@@ -44,12 +44,11 @@ const File = {
   },
   async import(ctx) {
     var {path} = ctx.req.files[0];
-    var {projectName} = ctx.params;
     // 路径，从文件中获取
     var config = File.config || {};
     config.filePath = path;
     try {
-      await DBIO.import({dbs: [projectName], config});
+      await DBIO.import({dbs: [{name: config.db || 'clannad', drop: true}], config});
     } catch (err) {
       throw new RestError(500, 'FILE_IMPORT_ERR', err.message);
     }
