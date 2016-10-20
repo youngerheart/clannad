@@ -46,8 +46,7 @@ clannad.configIO({
   port: 27017,
   user: '',
   password: '',
-  out: '', // export filename
-  drop: false // Before restoring the collections from the dumped backup, drops the collections from the target database.
+  out: '' // export filename
 });
 
 // router interface
